@@ -1,0 +1,17 @@
+name: darpule
+description: A starting point for Dart libraries or applications.
+version: 0.0.1
+author: Ray King <taipan.king@gmail.com>
+homepage: https://www.example.com
+
+environment:
+  sdk: '>=1.0.0 <2.0.0'
+
+dependencies:
+  quiver_optional: "^1.0.0-dev.1"
+  quiver_hashcode: "^1.0.0-dev.1"
+  quiver_collection: "^1.0.0-dev.1"
+
+dev_dependencies:
+  test: '>=0.12.0 <0.13.0'
+  dart_dev: "^1.0.3"
