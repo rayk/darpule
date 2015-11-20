@@ -10,7 +10,7 @@ The latter, shall standalone as __DarpuleBox__ and be will dependent on upon thi
 
 The base use case this package attempts to address is the passing of multiple parameters and results in a clean, structured way. 
 
-So firstly we wanted a standard easy creation of an immutable tuple with n elements. Having one type 'Tuple' gives up a lot of the type goodness. Sure we could leverage generics and have 'Tuple3<T1, T2,T3>',  we decided to attack this differently. See predicates below. 
+So firstly we wanted a standard easy creation of an immutable tuple with n elements. Having one type 'Tuple' gives up a lot of the type goodness. Sure we could leverage generics and have  "Tuple3 <T1, T2,T3>",  we decided to attack this differently. See predicates below. 
 
 ```dart
 /// Creating a Tuple
@@ -19,8 +19,7 @@ So firstly we wanted a standard easy creation of an immutable tuple with n eleme
     Function messageSender = sendMsg(String message) {....}
     Tuple supplies = new Tuple(['Compass', 'Ground Sheet', 'Maps', 'FireStarters', 'Ground Tarp']);
     Tuple goConditions = new Tuple([34.5, 25.5, 'Go Message' 'No Go Message', true, 30]);
-    Tuple event = new Tuple ([supplies, goConditions, tempCheck, messageSender]) 
-
+    Tuple event = new Tuple ([supplies, goConditions, tempCheck, messageSender]); 
 
 ```
 
@@ -29,7 +28,7 @@ So as not to reinvent the wheel the Tuple type just extends UnmodifiableListView
 You can also just call the Tuple instance, and it returns a list of its elements that you can modify in any way. When ready pass that list back into a Tuple constructor, and we have a new immutable Tuple.
 
 ```dart
-/// Creating a Tuple
+/// Getting Stuff Back
 
 
 ```
@@ -37,7 +36,7 @@ You can also just call the Tuple instance, and it returns a list of its elements
 We also did not want lightweight to mean just a 'Bag of Types.' So there are some features that give it some self-awareness.
 
 ```dart
-/// Creating a Tuple
+/// Telling me About yourself
 
 
 ```
@@ -45,7 +44,7 @@ We also did not want lightweight to mean just a 'Bag of Types.' So there are som
 This is all very nice and neat, but the only type we have it is 'Tuple' where is this where predicates come into play. It easily to become a Tupleholic and when you end up with functions that accept any Tuple, a real mess can appear overnight. Hence the Predicate library, given that we have a list of typed elements within the tuple we may as well see what funky, functional things we can do.
 
 ```dart
-/// Creating a Tuple
+/// Are you the right one
 
 
 ```
