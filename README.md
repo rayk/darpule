@@ -8,7 +8,7 @@ Immutability certain helps with persistence and being able to send it to an Isol
 
 The latter, shall standalone as __DarpuleBox__ and be will dependent on upon this package. This allows just using the Tuple to sling data around without the overhead of the DarpuleBox.
 
-The base use case this package attempts to address is the passing of multiple parameters and results in a clean, structured way. 
+The base use case this package attempts to address, is the passing of multiple parameters and results in a clean, structured way. 
 
 So firstly we wanted a standard easy creation of an immutable tuple with n elements. Having one type 'Tuple' gives up a lot of the type goodness. Sure we could leverage generics and have  "Tuple3 <T1, T2,T3>",  we decided to attack this differently. See predicates below. 
 
