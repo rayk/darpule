@@ -442,8 +442,6 @@ main() {
 
   group('Element Types;\t', () {
     test('Should return the element types.', () async {
-      Tuple typeTest1 = new Tuple(["String", 3892, 3892.34]);
-      Tuple elementTypes = elementTypesOf(typeTest1);
     });
   });
 
