@@ -1,6 +1,6 @@
 name: darpule
 description: Lightweight, Robust Immutable Tuple Implementation.
-version: 0.0.1
+version: 0.1.0
 author: Ray King <taipan.king@gmail.com>
 homepage: http://rayk.github.io/darpule
 
@@ -11,7 +11,6 @@ dependencies:
   quiver_collection: "^1.0.0-dev.1"
   quiver_hashcode: "^1.0.0-dev.1"
   quiver_optional: "^1.0.0-dev.1"
-
 
 dev_dependencies:
   changelog: "^1.3.6"

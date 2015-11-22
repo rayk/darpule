@@ -176,9 +176,4 @@ bool isTupleTypeMatched(Tuple subject, Tuple pattern) {
       : false;
 }
 
-/// Determines if the subject tuple needs enchantment.
-bool _subjectRequiresInjection(Tuple subject, Tuple pattern) {
-  return false;
-}
-
 
