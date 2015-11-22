@@ -6,13 +6,13 @@ The tuple has been knocking around for a long time, with implementations in Pyth
 
 Immutability certain helps with persistence and being able to send it to an Isolate without the serialising and marshalling is handy.
 
-The this package attempts to address the base use case, which is the passing of multiple parameters and results in a clean, structured way, via a Tuple. The implementation leverages all the Dart Goodness. This is how the lightweight implementation was possible.  
+This package attempts to address the base use case, which is the passing of multiple parameters and results in a clean, structured way, via a Tuple. The implementation wraps all the Dart Goodness to deliver lightweight implementation was possible.  
 
 ### Usage Examples
 
 _The code before can be run from examples/darpule.dart._
 
-Just one easy way to create an immutable tuple with n elements. Using a single generative constructor, development time type checking was deliberately traded off. Insteadof using generics to parametrise multiple Tuple types,functional predicates where used for dynamic runtime type checking.
+Just one easy way to create an immutable tuple with _n_ elements. Using a single generative constructor, development time type checking was deliberately traded off. Insteadof using generics to parametrise multiple Tuple types, functional predicates where used for dynamic runtime type checking.
 
 ```dart
     /// Created in a very ad-hoc.
@@ -61,7 +61,7 @@ You can also just call the Tuple instance, and it returns a list of its elements
     assert (notSameContentWithMore.type == TupleType.triple);
 ```
 
-Beside UnmodifiableList View not support mutations, we have introduced an [MutabilityError] just you can blow up something attempts mutate your tuple.
+Beside UnmodifiableList View not supporting mutations, we have introduced an [MutabilityError] just so you can blow up when something attempts mutate your tuple.
 ```dart
     /// Tuple is Immutable, trying results in an programming error.
   
@@ -107,7 +107,7 @@ Equal is based upon the content and structure of the tuple.
     assert(downDeep != deepLikeness);
 ```
 
-This is all very nice and neat, but the only type we have it is 'Tuple'. This where predicates come into play. It easily to become a Tupleholic and when you end up with functions that accept any Tuple, a real mess can appear overnight. Hence the Predicate library, given that we have a list of typed elements within the tuple we may as well see what funky, functional things we can do.
+This is all very nice and neat, but the only type we have it is 'Tuple'. This is where predicates come into play. It easily to become a Tupleholic and when you end up with functions that accept any Tuple, a real mess can appear overnight. Hence the Predicate library, given that we have a list of typed elements within the tuple we may as well see what funky, functional things we can do.
 
 Without importing the predicate library, you can use the [elementTypesOf(Tuple tuple)] to get a tuple of the element types as [Type].
 
@@ -122,7 +122,7 @@ Without importing the predicate library, you can use the [elementTypesOf(Tuple t
     assert(typesInPayload[3] == bool);
 ```
 
-By importing the predicate library, you can start do a few more things. All the Predicates evaluate to True or False, True being yes and false being no.
+By importing the predicate library, you can start do a few more things. All the Predicates evaluate to True or False, True being yes and False being no.
 ```dart
     /// Predicate can help you answer some questions about the Tuple.
 
@@ -163,3 +163,12 @@ Things also have a way of being odd shaped, fuzzy around the edges or just not c
        new Tuple([String, int, double, Object, new Optional.of(bool)]);
    assert(isTupleTypeMatched(payload, acceptableStandard) == true);
 ```
+
+### Limitations & Alternatives
+
+- This Package is not designed to deliver a collection of Tuple nor a classic tuple space.
+- [tuple](https://pub.dartlang.org/packages/tuple) provides stronger type implementation, has nice way to layer a tuple within a tuple.
+- [duty](https://pub.dartlang.org/packages/duty) provides more then a Tuple but does have type safe containers for a Monuple, Pairple and Triple.
+- [vacuum_persistent] (https://pub.dartlang.org/packages/vacuum_persistent) provide a complete persistence with immutable data structures.
+
+If packages should be on this list and is not, just add it via a pull request or rise an [issue](https://github.com/rayk/darpule/issues/new).
