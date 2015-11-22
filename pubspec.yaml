@@ -1,17 +1,23 @@
 name: darpule
-description: A starting point for Dart libraries or applications.
+description: Lightweight, Robust Immutable Tuple Implementation.
 version: 0.0.1
 author: Ray King <taipan.king@gmail.com>
-homepage: https://www.example.com
+homepage: http://rayk.github.io/darpule
 
 environment:
   sdk: '>=1.0.0 <2.0.0'
 
 dependencies:
-  quiver_optional: "^1.0.0-dev.1"
-  quiver_hashcode: "^1.0.0-dev.1"
   quiver_collection: "^1.0.0-dev.1"
+  quiver_hashcode: "^1.0.0-dev.1"
+  quiver_optional: "^1.0.0-dev.1"
+
 
 dev_dependencies:
-  test: '>=0.12.0 <0.13.0'
+  changelog: "^1.3.6"
+  coverage: "^0.7.2"
   dart_dev: "^1.0.3"
+  dart_style: ">=0.1.8 <0.3.0"
+  dartdoc: "^0.4.0"
+  test: '>=0.12.0 <0.13.0'
+
