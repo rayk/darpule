@@ -7,6 +7,8 @@ library Predicate;
 import 'tuple.dart';
 import 'package:quiver_optional/optional.dart';
 
+export 'package:quiver_optional/optional.dart';
+
 /// Collection of the most basic predicates.
 ///
 /// This can be composed together to come up with criteria or rules that suit

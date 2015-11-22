@@ -21,6 +21,20 @@ Tuple elementTypesOf(Tuple subjectTuple) {
   return new Tuple(typeList);
 }
 
+/// Error that is thrown when code try to modify a tuple.
+class MutabilityError implements Error {
+  static const message = 'Tuple is immutable! It can not be changed.';
+
+  MutabilityError();
+
+  external StackTrace get stackTrace;
+
+  @override
+  toString() {
+    return message;
+  }
+}
+
 /// The immutable class that handles all the tuple types.
 ///
 /// Implementation is based upon extending [UnmodifiableListView] as a backing
@@ -43,11 +57,6 @@ class Tuple<E> extends UnmodifiableListView<E> {
 
   // Return number of optional types in tuple so they can excluded
   // from the element count.
-  int _optionalElementCount(){
-    var count = this.where((e) => e.runtimeType == Optional);
-    return count.length;
-  }
-
   @override
   int get hashCode {
     return hashObjects(this.call());
@@ -67,14 +76,52 @@ class Tuple<E> extends UnmodifiableListView<E> {
 
   /// Has no effect as a tuple can not be modified or changed.
   @override
-  void add(value) {}
+  void add(value) {
+    throw new MutabilityError();
+  }
 
-  /// Has no effect as a tuple can not be modified or changed.
+  /// Results in a [MutabilityError], it is programming error to attempt this.
+  /// Tuple is immutable, no changes post constructor.
   @override
-  void addAll(value) {}
+  void addAll(value) => throw new MutabilityError();
 
   /// Returns a copy of the elements in this tuple as a mutable list.
   List call() => this.toList();
+
+  /// Results in a [MutabilityError], it is programming error to attempt this.
+  /// Tuple is immutable, no changes post constructor.
+  @override
+  E removeAt(element) {
+    return throw new MutabilityError();
+  }
+
+  /// Results in a [MutabilityError], it is programming error to attempt this.
+  /// Tuple is immutable, no changes post constructor.
+  @override
+  E removeLast() {
+    return throw new MutabilityError();
+  }
+
+  /// Results in a [MutabilityError], it is programming error to attempt this.
+  /// Tuple is immutable, no changes post constructor.
+  @override
+  void removeRange(int start, int end) {
+    return throw new MutabilityError();
+  }
+
+  /// Results in a [MutabilityError], it is programming error to attempt this.
+  /// Tuple is immutable, no changes post constructor.
+  @override
+  void replaceRange(int start, int end, Iterable<E> iterable) {
+    return throw new MutabilityError();
+  }
+
+  /// Results in a [MutabilityError], it is programming error to attempt this.
+  /// Tuple is immutable, no changes post constructor.
+  @override
+  void setRange(int start, int end, Iterable<E> iterable, [int skipCount = 0]) {
+    return throw new MutabilityError();
+  }
 
   @override
   toString() {
@@ -83,6 +130,11 @@ class Tuple<E> extends UnmodifiableListView<E> {
     strBuf.write(' - ');
     strBuf.write('${this.call()}');
     return strBuf.toString();
+  }
+
+  int _optionalElementCount() {
+    var count = this.where((e) => e.runtimeType == Optional);
+    return count.length;
   }
 }
 
@@ -149,5 +201,3 @@ enum TupleType {
   /// Tuple with three and only sixteen elements.
   sexdecuple,
 }
-
-
