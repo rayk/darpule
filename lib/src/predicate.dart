@@ -121,8 +121,6 @@ bool isEachElementMatched(Tuple subject, Tuple pattern) {
   }
   return mutableSubject.every(
       (e) => isElementTypeMatch(e.runtimeType, pattern[subject.indexOf(e)]));
-
-
 }
 
 /// Predicate that returns [true] when the [Tuple] contains exactly seven elements.
@@ -175,5 +173,3 @@ bool isTupleTypeMatched(Tuple subject, Tuple pattern) {
       ? isEachElementMatched(subject, pattern) ? true : false
       : false;
 }
-
-
