@@ -37,7 +37,7 @@ Just one easy way to create an immutable tuple with _n_ elements. Using a single
     
 ```
 
-So as not to reinvent the wheel the Tuple type just extends Dart's UnmodifiableListView, which has a reasonably small footprint. This provides the iterator goodness for locating stuff. Just no modification after construction.
+So as not to reinvent the wheel the Tuple type just extends Dart's [UnmodifiableListView](https://api.dartlang.org/134830/dart-collection/UnmodifiableListView-class.html), which has a reasonably small footprint. This provides the iterator goodness for locating stuff. Just no modification after construction.
 
 You can also just call the Tuple instance, and it returns a list of its elements that you can modify in any way. When ready pass that list back into a Tuple constructor, and we have a new immutable Tuple.
 
