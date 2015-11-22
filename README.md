@@ -2,7 +2,7 @@
 
 _Lightweight, Robust Immutable Tuple Implementation._
 
-The tuple has been knocking around for a long time, with implementations in Python, Lisp, Scala, Linda and many other languages it is the workhorse for sling data around between functions.
+The [tuple](https://en.wikipedia.org/wiki/Tuple) has been knocking around for a long time, with implementations in Python, Lisp, Scala, Linda and many other languages it is the workhorse for sling data around between functions.
 
 Immutability certain helps with persistence and being able to send it to an Isolate without the serialising and marshalling is handy.
 
@@ -171,4 +171,4 @@ Things also have a way of being odd shaped, fuzzy around the edges or just not c
 - [duty](https://pub.dartlang.org/packages/duty) provides more then a Tuple but does have type safe containers for a Monuple, Pairple and Triple.
 - [vacuum_persistent] (https://pub.dartlang.org/packages/vacuum_persistent) provide a complete persistence with immutable data structures.
 
-If packages should be on this list and is not, just add it via a pull request or rise an [issue](https://github.com/rayk/darpule/issues/new).
+If a packages should be on this list and is not, just add it via a pull request or rise an [issue](https://github.com/rayk/darpule/issues/new).
