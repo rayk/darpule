@@ -268,7 +268,6 @@ main() {
     test('Should return true if the tuple does not contain another tuple.',
         () async {
       Tuple tup1 = new Tuple(['Rain', 'forest']);
-      Tuple tup2 = new Tuple(['wildeness', tup1]);
       expect(isLeaf(tup1), isTrue);
     });
 
