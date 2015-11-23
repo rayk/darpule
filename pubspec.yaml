@@ -5,7 +5,7 @@ author: Ray King <taipan.king@gmail.com>
 homepage: http://rayk.github.io/darpule
 
 environment:
-  sdk: '>=1.0.0 <2.0.0'
+  sdk: '>=1.12.0 <2.0.0'
 
 dependencies:
   quiver_collection: "^1.0.0-dev.1"
