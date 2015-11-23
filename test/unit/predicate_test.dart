@@ -1,9 +1,9 @@
 library darpule.test.predicate;
 
-import 'package:test/test.dart';
 import 'package:darpule/predicate.dart';
 import 'package:darpule/tuple.dart';
 import 'package:quiver_optional/optional.dart';
+import 'package:test/test.dart';
 
 /// Boring repetitive test, basis of the tuple guarantee of being bug free.
 
@@ -24,9 +24,9 @@ main() {
     Tuple duodecuple = new Tuple([2, 3, 5, 6, 8, 2, 8, 9, 12, 75, 12, 85]);
     Tuple tredecuple = new Tuple([1, 9, 2, 7, 3, 9, 1, 9, 1, 0, 2, 8, 2]);
     Tuple quattuordecuple =
-    new Tuple([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+        new Tuple([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
     Tuple quindecuple =
-    new Tuple([9, 3, 5, 6, 7, 2, 1, 7, 8, 5, 3, 7, 4, 6, 3]);
+        new Tuple([9, 3, 5, 6, 7, 2, 1, 7, 8, 5, 3, 7, 4, 6, 3]);
     Tuple sexdecuple = new Tuple(
         [true, false, 0, 3983.1, 9009, true, false, 0, 0, 0, 1, 1, 4, 5, 6, 2]);
 
@@ -172,13 +172,13 @@ main() {
     test('Should return false no wildcards or optionals, subject is long', () {
       Tuple pattern = new Tuple([int, String, bool, double]);
       Tuple subject =
-      new Tuple([23, 'waterlittlies', true, 3493.921, false, 'horse']);
+          new Tuple([23, 'waterlittlies', true, 3493.921, false, 'horse']);
       expect(isElementCountEqual(subject, pattern), isFalse);
     });
 
     test('Should return false, as wildcard included but element not.', () {
       Tuple pattern = new Tuple([int, Object, String, bool]);
-      Tuple subject = new Tuple([22, 'water runner', true]);
+      Tuple subject = new Tuple([22, 'water-runner', true]);
       expect(isElementCountEqual(subject, pattern), isFalse);
     });
 
@@ -197,18 +197,57 @@ main() {
     test('Should return true, all optionals in pattern and subject nulluple.',
         () {
       Tuple pattern =
-      new Tuple([new Optional.of(String), new Optional.of(int)]);
+          new Tuple([new Optional.of(String), new Optional.of(int)]);
       Tuple subject = new Tuple([]);
       expect(isElementCountEqual(subject, pattern), isTrue);
     });
 
     test('Should return false, optionals and wildcards used.', () {
       Tuple pattern =
-      new Tuple([String, bool, Object, new Optional.of(bool), int, String]);
+          new Tuple([String, bool, Object, new Optional.of(bool), int, String]);
       Tuple subject = new Tuple(['element', 'element', 'element', 'element']);
       expect(isElementCountEqual(subject, pattern), isFalse);
     });
 
+    test('Should return true when optionals are in the actual elements.', () {
+      Tuple pattern = new Tuple([String, bool, new Optional.of(int), double]);
+      Tuple subject = new Tuple(['WaterRat', true, 38, 394.34]);
+      expect(isElementCountEqual(subject, pattern), isTrue);
+    });
+
+    test('Should return true when many optionals are in the actual elements.',
+        () {
+      Tuple pattern =
+          new Tuple([bool, new Optional.of(int), new Optional.of(String), int]);
+      Tuple subject = new Tuple([true, 343, 'skyrunner', 992]);
+      expect(isElementCountEqual(subject, pattern), isTrue);
+    });
+
+    test('Should return true no matter where the optional is located.', () {
+      Tuple pattern = new Tuple([
+        new Optional.of(bool),
+        new Optional.absent(),
+        new Optional.of(int),
+        bool,
+        double
+      ]);
+      Tuple subject = new Tuple([true, 33, 93, false, 393.32]);
+      expect(isElementCountEqual(subject, pattern), isTrue);
+    });
+
+    test('Should return true if the tuple does not contain another tuple.', () {
+      Tuple tup1 = new Tuple(['Rain', 'forest']);
+      expect(isLeaf(tup1), isTrue);
+    });
+
+    test('Should return false if the tuple does contain another tuple.', () {
+      Tuple tup1 = new Tuple(['Rain', 'forest']);
+      Tuple tup2 = new Tuple(['wildeness', tup1]);
+      expect(isLeaf(tup2), isFalse);
+    });
+  });
+
+  group('isElementTypeMatch:\t', () {
     test('Should return elements types as matching true.', () async {
       var element = String;
       var pattern = String;
@@ -227,12 +266,32 @@ main() {
       expect(isElementTypeMatch(element, pattern), isTrue);
     });
 
-    test('Should return true when both are of type Object.', () async {
+    test('Should return true when both are of type Object.', () {
       var element = Object;
       var pattern = Object;
       expect(isElementTypeMatch(element, pattern), isTrue);
     });
 
+    test('Should return true when optional element matches.', () {
+      var element = int;
+      var pattern = new Optional.absent();
+      expect(isElementTypeMatch(element, pattern), isTrue);
+    });
+
+    test('Should return false optional present but is not a type match.', () {
+      var element = bool;
+      var pattern = new Optional.of(String);
+      expect(isElementTypeMatch(element, pattern), isFalse);
+    });
+
+    test('Should return true optional present of the correct type.', () {
+      var element = int;
+      var pattern = new Optional.of(int);
+      expect(isElementTypeMatch(element, pattern), isTrue);
+    });
+  });
+
+  group('isEachElementMatched:\t', () {
     test('Should return true tuple is type matched.', () async {
       Tuple subject = new Tuple(['Views', 3490, 'lakes']);
       Tuple pattern = new Tuple([String, int, String]);
@@ -263,23 +322,93 @@ main() {
       expect(isEachElementMatched(subject, pattern), isTrue);
     });
 
-
-
-    test('Should return true if the tuple does not contain another tuple.',
-        () async {
-      Tuple tup1 = new Tuple(['Rain', 'forest']);
-      expect(isLeaf(tup1), isTrue);
+    test('Should return true, optional at end of pattern not in elements.', () {
+      Tuple subject = new Tuple(['StringText', 2332, false]);
+      Tuple pattern = new Tuple([String, int, bool, new Optional.of(int)]);
+      expect(isEachElementMatched(subject, pattern), isTrue);
     });
 
-    test('Should return false if the tuple does contain another tuple.',
-        () async {
-      Tuple tup1 = new Tuple(['Rain', 'forest']);
-      Tuple tup2 = new Tuple(['wildeness', tup1]);
-      expect(isLeaf(tup2), isFalse);
+    test('Should return false, optional at end element type does not match',
+        () {
+      Tuple subject = new Tuple(['StringText', 2332, false, true]);
+      Tuple pattern = new Tuple([String, int, bool, new Optional.of(int)]);
+      expect(isEachElementMatched(subject, pattern), isFalse);
     });
 
+    test('Should return true, optional at end element type does match.', () {
+      Tuple subject = new Tuple(['StringText', 2332, false, 928273]);
+      Tuple pattern = new Tuple([String, int, bool, new Optional.of(int)]);
+      expect(isEachElementMatched(subject, pattern), isTrue);
+    });
 
+    test(
+        'Should return true, 2 optional 1 element missing at end element type does match.',
+        () {
+      Tuple subject = new Tuple(['StringText', 2332, false, 928273]);
+      Tuple pattern = new Tuple(
+          [String, int, bool, new Optional.of(int), new Optional.of(bool)]);
+      expect(isEachElementMatched(subject, pattern), isTrue);
+    });
 
+    test('Should return false, optional at end element type does not match',
+        () {
+      Tuple subject = new Tuple(['StringText', 2332, false, true, false]);
+      Tuple pattern = new Tuple(
+          [String, int, bool, new Optional.of(int), new Optional.of(int)]);
+      expect(isEachElementMatched(subject, pattern), isFalse);
+    });
 
+    test('Should return true, 2 optional at end element type does match.', () {
+      Tuple subject = new Tuple(['StringText', 2332, false, 928273, true]);
+      Tuple pattern = new Tuple(
+          [String, int, bool, new Optional.of(int), new Optional.of(bool)]);
+      expect(isEachElementMatched(subject, pattern), isTrue);
+    });
+
+    test('Should return true, optional 2nd Position element type does match.',
+        () {
+      Tuple subject = new Tuple(['StringText', 2332, false, 928273]);
+      Tuple pattern =
+          new Tuple([String, new Optional.of(int), bool, new Optional.of(int)]);
+      expect(isEachElementMatched(subject, pattern), isTrue);
+    });
+
+    test('Should return true, optional 3rd Position element type does match.',
+        () {
+      Tuple subject = new Tuple(['StringText', 2332, 'JackRabbit', false]);
+      Tuple pattern = new Tuple([String, int, new Optional.of(String), bool]);
+      expect(isEachElementMatched(subject, pattern), isTrue);
+    });
+
+    test('Should return true as the optional is present in element.', () {
+      Tuple subject = new Tuple(['Longhaul', 382, 982.23, false]);
+      Tuple pattern = new Tuple([String, new Optional.of(int), double, bool]);
+      expect(isEachElementMatched(subject, pattern), isTrue);
+    });
+
+    test('Should return true, optional at start of pattern not in elements.',
+        () {
+      Tuple subject = new Tuple(['StringText', 2332, false]);
+      Tuple pattern = new Tuple([new Optional.of(String), int, bool]);
+      expect(isEachElementMatched(subject, pattern), isTrue);
+    });
+
+    test('Should return false, as present optional element type is wrong,', () {
+      Tuple subject = new Tuple([false, true, 349, false]);
+      Tuple pattern = new Tuple([new Optional.of(String), bool, int, bool]);
+      expect(isEachElementMatched(subject, pattern), isFalse);
+    });
+
+    test('Should retrun true, optional at start and element of right type.', () {
+      Tuple subject = new Tuple(['Radio', true, 'easy', 34]);
+      Tuple pattern = new Tuple([new Optional.of(String), bool, String, int]);
+      expect(isEachElementMatched(subject, pattern), isTrue);
+    });
+
+    test('Should retrun true, optional at start does not specify a type.', () {
+      Tuple subject = new Tuple([39392.34, true, 'easy', 34]);
+      Tuple pattern = new Tuple([new Optional.absent(), bool, String, int]);
+      expect(isEachElementMatched(subject, pattern), isTrue);
+    });
   });
 }

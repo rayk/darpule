@@ -101,4 +101,13 @@ main() {
       expect(isTupleTypeMatched(subjectTuple, pattern), isFalse);
     });
   });
+
+  group('Optional Pattern:\t', () {
+    test('Should return true when optional untyped element is present.', () {
+      Tuple pattern =
+          new Tuple([String, bool, int, new Optional.absent(), int]);
+      Tuple subjectTuple = new Tuple(['rabbit', false, 23, 29]);
+      expect(isTupleTypeMatched(subjectTuple, pattern), isTrue);
+    });
+  });
 }

@@ -6,6 +6,7 @@ library Predicate;
 
 import 'tuple.dart';
 import 'package:quiver_optional/optional.dart';
+import 'dart:developer';
 
 export 'package:quiver_optional/optional.dart';
 
@@ -28,17 +29,23 @@ bool isDuodecuple(Tuple tuple) =>
 
 /// Predicate that returns [true] when both tuple 1 and tuple 2 contains the same number of elements.
 ///
-/// This is based upon calling [elementCount] on the [Tuple], hence
-/// it is not a comparison on length.
-bool isElementCountEqual(Tuple tuple1, Tuple tuple2) {
-  return tuple1.elementCount == tuple2.elementCount ? true : false;
-}
+/// As Tuple excludes [Optional] from element count, because they are not required to be present.
+/// when elementCount is not equal then length is tested, to account for optional elements
+/// which are present.
+bool isElementCountEqual(Tuple tuple1, Tuple tuple2) =>
+    tuple1.elementCount == tuple2.elementCount || tuple1.length == tuple2.length
+        ? true
+        : false;
 
-/// Test if a tuple element matches the pattern element or wildcard [Object]
-bool isElementTypeMatch(Type tupleElement, Type patternElement) {
+/// Test if a tuple element matches the pattern element or wildcard [Object] or
+/// [Optional] with or without a type specified.
+bool isElementTypeMatch(Type tupleElement, var patternElement) {
   return tupleElement == patternElement ||
-      patternElement == Object ||
-      patternElement == Optional ? true : false;
+          patternElement == Object ||
+          patternElement is Optional && !patternElement.isPresent ||
+          patternElement is Optional && patternElement.value == tupleElement
+      ? true
+      : false;
 }
 
 /// Predicate that returns [true] when the [Tuple] contains exactly eleven elements.
@@ -109,18 +116,46 @@ bool isQuinTuple(Tuple tuple) =>
 /// Treats [Object] as a wildcard. Errors when subject and pattern
 /// do not have same number of elements, except in the case where one or more
 /// elements in [pattern] is an [Optional] object type.
+///
+/// Where [pattern] contains optional and each element false a type match.
+///
 bool isEachElementMatched(Tuple subject, Tuple pattern) {
-  Tuple mutableSubject = subject;
+  bool matchingResults = false;
 
-  if (pattern.contains(Optional)) {
-    Iterable optElements = pattern.where((e) => e.runtimeType == Optional);
-    List optionalElements = optElements.toList(growable: false);
-    for (var option in optionalElements) {
-      mutableSubject.insert(optionalElements.indexOf(option), Object);
-    }
+  subject.every((e) {
+          return isElementTypeMatch(e.runtimeType, pattern[subject.indexOf(e)]);
+        })
+      ? matchingResults = true
+      : isMatchedWithInjection(subject, pattern)
+          ? matchingResults = true
+          : matchingResults = false;
+
+  return matchingResults;
+}
+/// Returns [true] if injecting the optional value type into pattern causes the
+/// subject elements to match the pattern.
+///
+/// Handles turning the optional into a concrete so the element that is present
+/// can be compared against it.
+bool isMatchedWithInjection(Tuple subject, Tuple pattern) {
+  if (isFirstElementOptional(pattern)) {
+    List modifiedPattern = pattern();
+    var convertedType = convertOptionalToType(pattern[0]);
+    modifiedPattern.replaceRange(0, 0, [convertedType]);
+    return isEachElementMatched(subject, new Tuple(modifiedPattern));
+  } else {
+    return false;
   }
-  return mutableSubject.every(
-      (e) => isElementTypeMatch(e.runtimeType, pattern[subject.indexOf(e)]));
+}
+
+/// Returns the type in the optional if absent then passes back an [Object]
+Type convertOptionalToType(Optional optional) {
+  return optional.isPresent ? optional.value : Object;
+}
+
+/// Returns [true] if the first element of a Tuple is an optional.
+bool isFirstElementOptional(Tuple pattern) {
+  return pattern[0] is Optional ? true : false;
 }
 
 /// Predicate that returns [true] when the [Tuple] contains exactly seven elements.

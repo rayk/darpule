@@ -66,7 +66,7 @@ main() {
 
     test('Should create a Quintuple, with 5 elements.', () {
       Tuple testTuple =
-      new Tuple([element0, element1, element2, element3, element4]);
+          new Tuple([element0, element1, element2, element3, element4]);
       expect(testTuple.type, equals(TupleType.quintuple));
       expect(testTuple[0] is String, isTrue);
       expect(testTuple[1] is int, isTrue);
@@ -379,7 +379,7 @@ main() {
 
     test('Should not include optional types in element count.', () {
       Tuple testTupleOpt =
-      new Tuple(['String Word', 23, true, new Optional.absent()]);
+          new Tuple(['String Word', 23, true, new Optional.absent()]);
       expect(testTupleOpt.elementCount, 3);
       expect(testTupleOpt.length, 4);
     });
@@ -440,15 +440,99 @@ main() {
     });
   });
 
-  group('Element Types;\t', () {
-    test('Should return the element types.', () async {
+  group('Element Types:\t', () {
+    test('Should return the element types.', () {
+      Tuple testTuple = new Tuple(['Shark', true, 393, 'water']);
+      expect(elementTypesOf(testTuple), equals([String, bool, int, String]));
+    });
+  });
+
+  group('Tuple Mutability:\t', () {
+    test('Should throw mutability error on add().', () {
+      Tuple testTuple = new Tuple([
+        'Leftwing',
+        'RightWing',
+        new Tuple([false])
+      ]);
+      expect(() => testTuple.add('anuthing'),
+          throwsA(new isInstanceOf<MutabilityError>()));
+    });
+
+    test('Should throw mutability error on addAll().', () {
+      Tuple testTuple = new Tuple([
+        'Leftwing',
+        'RightWing',
+        new Tuple([false])
+      ]);
+      expect(() => testTuple.addAll(['anything', 383, 'rocky']),
+          throwsA(new isInstanceOf<MutabilityError>()));
+    });
+
+    test('Should throw mutability error on removeAt().', () {
+      Tuple testTuple = new Tuple([
+        'Leftwing',
+        'RightWing',
+        new Tuple([false])
+      ]);
+      expect(() => testTuple.removeAt(0),
+          throwsA(new isInstanceOf<MutabilityError>()));
+    });
+
+    test('Should throw mutability error on removeLast().', () {
+      Tuple testTuple = new Tuple([
+        'Leftwing',
+        'RightWing',
+        new Tuple([false])
+      ]);
+      expect(() => testTuple.removeLast(),
+          throwsA(new isInstanceOf<MutabilityError>()));
+    });
+
+    test('Should throw mutability error on removeRange().', () {
+      Tuple testTuple = new Tuple([
+        'Leftwing',
+        'RightWing',
+        new Tuple([false])
+      ]);
+      expect(() => testTuple.removeRange(0, 1),
+          throwsA(new isInstanceOf<MutabilityError>()));
+    });
+
+    test('Should throw mutability error on replaceRange.', () {
+      Tuple testTuple = new Tuple([
+        'Leftwing',
+        'RightWing',
+        new Tuple([false])
+      ]);
+      expect(() => testTuple.replaceRange(0, 1, ['car']),
+          throwsA(new isInstanceOf<MutabilityError>()));
+    });
+
+    test('Should throw mutability error on removeLast().', () {
+      Tuple testTuple = new Tuple([
+        'Leftwing',
+        'RightWing',
+        new Tuple([false])
+      ]);
+      expect(() => testTuple.removeLast(),
+          throwsA(new isInstanceOf<MutabilityError>()));
+    });
+
+    test('Should throw mutability error on setRange().', () {
+      Tuple testTuple = new Tuple([
+        'Leftwing',
+        'RightWing',
+        new Tuple([false])
+      ]);
+      expect(() => testTuple.setRange(0, 1, ['cats']),
+          throwsA(new isInstanceOf<MutabilityError>()));
     });
   });
 
   group("Tuple toString():\t", () {
     test('Should return a string describing the tuple', () {
       Tuple testTupleA =
-      new Tuple(['Bear', 'snow', 'water', 34.23, 2, 'views', 'food']);
+          new Tuple(['Bear', 'snow', 'water', 34.23, 2, 'views', 'food']);
       expect(
           testTupleA.toString(),
           equals(
