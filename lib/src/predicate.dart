@@ -4,9 +4,9 @@
 // Public API.
 library Predicate;
 
-import 'tuple.dart';
 import 'package:quiver_optional/optional.dart';
-import 'dart:developer';
+
+import 'tuple.dart';
 
 export 'package:quiver_optional/optional.dart';
 
@@ -132,6 +132,7 @@ bool isEachElementMatched(Tuple subject, Tuple pattern) {
 
   return matchingResults;
 }
+
 /// Returns [true] if injecting the optional value type into pattern causes the
 /// subject elements to match the pattern.
 ///
