@@ -125,6 +125,6 @@ main() {
   assert(isTupleTypeMatched(payload, lowerStandard) == true);
 
   Tuple differentStandard =
-  new Tuple([new Optional.of(String), int, double, bool]);
+      new Tuple([new Optional.of(String), int, double, bool]);
   assert(isTupleTypeMatched(payload, differentStandard) == true);
 }
