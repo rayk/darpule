@@ -2,17 +2,19 @@
 
 _Lightweight, Robust Immutable Tuple Implementation._
 
+[![codecov.io](https://codecov.io/github/rayk/darpule/coverage.svg?branch=master)](https://codecov.io/github/rayk/darpule?branch=master)   [![Build Status](https://travis-ci.org/rayk/darpule.svg?branch=release)](https://travis-ci.org/rayk/darpule)
+
 The [tuple](https://en.wikipedia.org/wiki/Tuple) has been knocking around for a long time, with implementations in Python, Lisp, Scala, Linda and many other languages it is the workhorse for sling data around between functions.
 
 Immutability certain helps with persistence and being able to send it to an Isolate without the serialising and marshalling is handy.
 
-This package attempts to address the base use case, which is the passing of multiple parameters and results in a clean, structured way, via a Tuple. The implementation wraps all the Dart Goodness to deliver lightweight implementation was possible.  
+This package addresses the base use case, which is the passing of multiple parameters and results in a clean, structured way, via a Tuple. The implementation wraps all the Dart Goodness to deliver lightweight implementation was possible.  
 
 ### Usage Examples
 
-_The code before can be run from examples/darpule.dart._
+_The code below can be run from examples/darpule.dart._
 
-Just one easy way to create an immutable tuple with _n_ elements. Using a single generative constructor, development time type checking was deliberately traded off. Insteadof using generics to parametrise multiple Tuple types, functional predicates where used for dynamic runtime type checking.
+One easy way to create an immutable tuple with _n_ elements. Using a single generative constructor, development time type checking was deliberately traded off. Insteadof using generics to parametrise multiple Tuple types, functional predicates where used for dynamic runtime type checking.
 
 ```dart
     /// Created in a very ad-hoc.
@@ -37,9 +39,9 @@ Just one easy way to create an immutable tuple with _n_ elements. Using a single
     
 ```
 
-So as not to reinvent the wheel the Tuple type just extends Dart's [UnmodifiableListView](https://api.dartlang.org/134830/dart-collection/UnmodifiableListView-class.html), which has a reasonably small footprint. This provides the iterator goodness for locating stuff. Just no modification after construction.
+So as not to reinvent the wheel the Tuple type just extends Dart's [UnmodifiableListView](https://api.dartlang.org/134830/dart-collection/UnmodifiableListView-class.html), which has a reasonably small footprint. This provides the iterator goodness for locating stuff.
 
-You can also just call the Tuple instance, and it returns a list of its elements that you can modify in any way. When ready pass that list back into a Tuple constructor, and we have a new immutable Tuple.
+You can also just call the Tuple instance, and it returns a list of its elements that you can modify in any way. When ready, pass that list back into a Tuple constructor, and we have a new immutable Tuple.
 
 ```dart
     /// Ways to get a tuple elements
@@ -107,9 +109,9 @@ Equal is based upon the content and structure of the tuple.
     assert(downDeep != deepLikeness);
 ```
 
-This is all very nice and neat, but the only type we have it is 'Tuple'. This is where predicates come into play. It easily to become a Tupleholic and when you end up with functions that accept any Tuple, a real mess can appear overnight. Hence the Predicate library, given that we have a list of typed elements within the tuple we may as well see what funky, functional things we can do.
+This is all very nice and neat, but the only type we have is 'Tuple'. This is where predicates come into play. It easily to become a Tupleholic and when you end up with functions that accept any Tuple, a real mess can appear overnight, so probably best to keep them away from the surface areas of API's. To afford some protection at runtime there is the Predicate library, given a Tuple is a glorified list of typed elements, functions can be composed together to achieve anything.
 
-Without importing the predicate library, you can use the [elementTypesOf(Tuple tuple)] to get a tuple of the element types as [Type].
+Without importing the predicate library, you can use the [elementTypesOf(Tuple tuple)] to get the [Type] of each of the elements.
 
 ```dart
     /// Finding out what the elements are at runtime.
@@ -128,11 +130,13 @@ By importing the predicate library, you can start do a few more things. All the 
 
     assert(isSepTuple(payload) == false); // No it does not have 7 elements.
     assert(isQuadruple(payload) == true); // Yes it does have 4 elements
+    assert(isSexdecuple(payload) == false); // No it does not have 16 elements.
     assert(isLeaf(deepLikeness) == false); // No one of elements is a Tuple.
     assert(isLeaf(sameContent1) == true); // Yes, no other tuple are inside.
+    
 ```
 
-Unfortunately life is never that clean, sometimes we want to partial match some elements and we happy if other are are whatever type. To achieve this we use [Object] as a wildcard place holder.
+Unfortunately life is never that clean, sometimes we want to partial match some elements in the Tuple and not be too fussed about the other types as long as they are present. To achieve this we use [Object] as a wildcard place holder.
  
 ```dart
    /// Looking inside for a pattern.
@@ -154,7 +158,7 @@ Unfortunately life is never that clean, sometimes we want to partial match some 
    assert(isTupleTypeMatched(payload, veryLoosePattern) == false); 
 ```
 
-Things also have a way of being odd shaped, fuzzy around the edges or just not complete but we can live with it. So we bring [Optional] into play, it allows the element to be present or not present. Conditionally if it is present it we can ensure that is of a certain type.
+Things also have a way of being odd shaped, fuzzy around the edges or just not complete but we can live with it. To cater for this we bring [Optional] into play, it allows the element to be present or not present. Conditionally if it is present it can ensure that it is of a certain type. Both the wildcard and optional can be used in any position of in the pattern tuple.
 
 ```dart
    /// Real life is fuzzy
@@ -162,7 +166,26 @@ Things also have a way of being odd shaped, fuzzy around the edges or just not c
    Tuple acceptableStandard =
        new Tuple([String, int, double, Object, new Optional.of(bool)]);
    assert(isTupleTypeMatched(payload, acceptableStandard) == true);
+   
+   Tuple lowerStandard = new Tuple([String, new Optional.of(int), double, bool]);
+   assert(isTupleTypeMatched(payload, lowerStandard) == true);
+   
+   Tuple differentStandard = new Tuple([new Optional.of(String), int, double, bool]);
+   assert(isTupleTypeMatched(payload, differentStandard) == true);
 ```
+
+#### Using Optional
+
+[Optional](https://www.dartdocs.org/documentation/quiver_optional/1.0.0-dev.1/quiver.optional/Optional-class.html) is from dart Quiver Library, it denotes an optional element. The semantics of this is expected to change
+  when [NNBD (Non-null Types & Non-null By Default)](https://github.com/chalin/DEP-non-null) lands in dart. At that time Optional is expected to be deprecated from Quiver. Until then
+  we use optional in a pattern tuple to represent and element that may or not be present (it is optional!). We further use Optional.absent()
+  if we don't really care about the type or value when the element is present.
+    
+  Using optional.of(T value) we can express the rule that states, the element does not have to be in the tuple, but if it include it must
+  be of T value.
+    
+  Should you expect to use this heavily it is worth understanding the [migration strategies](https://github.com/chalin/DEP-non-null/blob/master/doc/dep-non-null-AUTOGENERATED-DO-NOT-EDIT.md#part-migration) being currently being proposed. 
+    
 
 ### Limitations & Alternatives
 

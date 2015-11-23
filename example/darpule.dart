@@ -3,8 +3,8 @@
 
 library darpule.example;
 
-import 'package:darpule/src/tuple.dart';
 import 'package:darpule/src/predicate.dart';
+import 'package:darpule/src/tuple.dart';
 
 main() {
   /// Created very ad-hoc.
@@ -120,4 +120,11 @@ main() {
   Tuple acceptableStandard =
       new Tuple([String, int, double, Object, new Optional.of(bool)]);
   assert(isTupleTypeMatched(payload, acceptableStandard) == true);
+
+  Tuple lowerStandard = new Tuple([String, new Optional.of(int), double, bool]);
+  assert(isTupleTypeMatched(payload, lowerStandard) == true);
+
+  Tuple differentStandard =
+      new Tuple([new Optional.of(String), int, double, bool]);
+  assert(isTupleTypeMatched(payload, differentStandard) == true);
 }
