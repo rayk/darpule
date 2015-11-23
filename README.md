@@ -2,6 +2,8 @@
 
 _Lightweight, Robust Immutable Tuple Implementation._
 
+[![codecov.io](https://codecov.io/github/rayk/darpule/coverage.svg?branch=master)](https://codecov.io/github/rayk/darpule?branch=master)   [![Build Status](https://travis-ci.org/rayk/darpule.svg?branch=release)](https://travis-ci.org/rayk/darpule)
+
 The [tuple](https://en.wikipedia.org/wiki/Tuple) has been knocking around for a long time, with implementations in Python, Lisp, Scala, Linda and many other languages it is the workhorse for sling data around between functions.
 
 Immutability certain helps with persistence and being able to send it to an Isolate without the serialising and marshalling is handy.
