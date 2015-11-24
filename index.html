@@ -1,53 +1,43 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en-us">
   <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="description" content="Darpule : Lightweight, robust immutable tuple implementation.">
-
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <title>Darpule</title>
+    <meta charset="UTF-8">
+    <title>Darpule by rayk</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
   </head>
-
   <body>
+    <section class="page-header">
+      <h1 class="project-name">Darpule</h1>
+      <h2 class="project-tagline">Lightweight, robust immutable tuple implementation.</h2>
+      <a href="https://github.com/rayk/darpule" class="btn">View on GitHub</a>
+      <a href="https://github.com/rayk/darpule/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/rayk/darpule/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/rayk/darpule">View on GitHub</a>
-
-          <h1 id="project_title">Darpule</h1>
-          <h2 id="project_tagline">Lightweight, robust immutable tuple implementation.</h2>
-
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/rayk/darpule/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/rayk/darpule/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h1>
+    <section class="main-content">
+      <h1>
 <a id="darpule" class="anchor" href="#darpule" aria-hidden="true"><span class="octicon octicon-link"></span></a>Darpule</h1>
 
 <p><em>Lightweight, Robust Immutable Tuple Implementation.</em></p>
+
+<p><a href="https://codecov.io/github/rayk/darpule?branch=master"><img src="https://codecov.io/github/rayk/darpule/coverage.svg?branch=master" alt="codecov.io"></a>   <a href="https://travis-ci.org/rayk/darpule"><img src="https://travis-ci.org/rayk/darpule.svg?branch=release" alt="Build Status"></a></p>
 
 <p>The <a href="https://en.wikipedia.org/wiki/Tuple">tuple</a> has been knocking around for a long time, with implementations in Python, Lisp, Scala, Linda and many other languages it is the workhorse for sling data around between functions.</p>
 
 <p>Immutability certain helps with persistence and being able to send it to an Isolate without the serialising and marshalling is handy.</p>
 
-<p>This package attempts to address the base use case, which is the passing of multiple parameters and results in a clean, structured way, via a Tuple. The implementation wraps all the Dart Goodness to deliver lightweight implementation was possible.  </p>
+<p>This package addresses the base use case, which is the passing of multiple parameters and results in a clean, structured way, via a Tuple. The implementation wraps all the Dart Goodness to deliver lightweight implementation was possible.  </p>
 
 <h3>
 <a id="usage-examples" class="anchor" href="#usage-examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage Examples</h3>
 
-<p><em>The code before can be run from examples/darpule.dart.</em></p>
+<p><em>The code below can be run from examples/darpule.dart.</em></p>
 
-<p>Just one easy way to create an immutable tuple with <em>n</em> elements. Using a single generative constructor, development time type checking was deliberately traded off. Insteadof using generics to parametrise multiple Tuple types, functional predicates where used for dynamic runtime type checking.</p>
+<p>One easy way to create an immutable tuple with <em>n</em> elements. Using a single generative constructor, development time type checking was deliberately traded off. Insteadof using generics to parametrise multiple Tuple types, functional predicates where used for dynamic runtime type checking.</p>
 
 <div class="highlight highlight-source-dart"><pre>    <span class="pl-c">/// Created in a very ad-hoc.</span>
 
@@ -70,9 +60,9 @@
     <span class="pl-k">assert</span>(collective.type <span class="pl-k">==</span> TupleType.triple);
 </pre></div>
 
-<p>So as not to reinvent the wheel the Tuple type just extends Dart's <a href="https://api.dartlang.org/134830/dart-collection/UnmodifiableListView-class.html">UnmodifiableListView</a>, which has a reasonably small footprint. This provides the iterator goodness for locating stuff. Just no modification after construction.</p>
+<p>So as not to reinvent the wheel the Tuple type just extends Dart's <a href="https://api.dartlang.org/134830/dart-collection/UnmodifiableListView-class.html">UnmodifiableListView</a>, which has a reasonably small footprint. This provides the iterator goodness for locating stuff.</p>
 
-<p>You can also just call the Tuple instance, and it returns a list of its elements that you can modify in any way. When ready pass that list back into a Tuple constructor, and we have a new immutable Tuple.</p>
+<p>You can also just call the Tuple instance, and it returns a list of its elements that you can modify in any way. When ready, pass that list back into a Tuple constructor, and we have a new immutable Tuple.</p>
 
 <div class="highlight highlight-source-dart"><pre>    <span class="pl-c">/// Ways to get a tuple elements</span>
 
@@ -135,9 +125,9 @@
     <span class="pl-k">assert</span>(deepLikeness <span class="pl-k">==</span> deeperLikeness);
     <span class="pl-k">assert</span>(downDeep <span class="pl-k">!=</span> deepLikeness);</pre></div>
 
-<p>This is all very nice and neat, but the only type we have it is 'Tuple'. This is where predicates come into play. It easily to become a Tupleholic and when you end up with functions that accept any Tuple, a real mess can appear overnight. Hence the Predicate library, given that we have a list of typed elements within the tuple we may as well see what funky, functional things we can do.</p>
+<p>This is all very nice and neat, but the only type we have is 'Tuple'. This is where predicates come into play. It easily to become a Tupleholic and when you end up with functions that accept any Tuple, a real mess can appear overnight, so probably best to keep them away from the surface areas of API's. To afford some protection at runtime there is the Predicate library, given a Tuple is a glorified list of typed elements, functions can be composed together to achieve anything.</p>
 
-<p>Without importing the predicate library, you can use the [elementTypesOf(Tuple tuple)] to get a tuple of the element types as [Type].</p>
+<p>Without importing the predicate library, you can use the [elementTypesOf(Tuple tuple)] to get the [Type] of each of the elements.</p>
 
 <div class="highlight highlight-source-dart"><pre>    <span class="pl-c">/// Finding out what the elements are at runtime.</span>
 
@@ -154,10 +144,12 @@
 
     <span class="pl-k">assert</span>(isSepTuple(payload) <span class="pl-k">==</span> <span class="pl-c1">false</span>); <span class="pl-c">// No it does not have 7 elements.</span>
     <span class="pl-k">assert</span>(isQuadruple(payload) <span class="pl-k">==</span> <span class="pl-c1">true</span>); <span class="pl-c">// Yes it does have 4 elements</span>
+    <span class="pl-k">assert</span>(isSexdecuple(payload) <span class="pl-k">==</span> <span class="pl-c1">false</span>); <span class="pl-c">// No it does not have 16 elements.</span>
     <span class="pl-k">assert</span>(isLeaf(deepLikeness) <span class="pl-k">==</span> <span class="pl-c1">false</span>); <span class="pl-c">// No one of elements is a Tuple.</span>
-    <span class="pl-k">assert</span>(isLeaf(sameContent1) <span class="pl-k">==</span> <span class="pl-c1">true</span>); <span class="pl-c">// Yes, no other tuple are inside.</span></pre></div>
+    <span class="pl-k">assert</span>(isLeaf(sameContent1) <span class="pl-k">==</span> <span class="pl-c1">true</span>); <span class="pl-c">// Yes, no other tuple are inside.</span>
+</pre></div>
 
-<p>Unfortunately life is never that clean, sometimes we want to partial match some elements and we happy if other are are whatever type. To achieve this we use [Object] as a wildcard place holder.</p>
+<p>Unfortunately life is never that clean, sometimes we want to partial match some elements in the Tuple and not be too fussed about the other types as long as they are present. To achieve this we use [Object] as a wildcard place holder.</p>
 
 <div class="highlight highlight-source-dart"><pre>   <span class="pl-c">/// Looking inside for a pattern.</span>
 
@@ -177,13 +169,32 @@
    Tuple veryLoosePattern <span class="pl-k">=</span> <span class="pl-k">new</span> Tuple ([Object, Object, Object, Object, Object]);
    <span class="pl-k">assert</span>(isTupleTypeMatched(payload, veryLoosePattern) <span class="pl-k">==</span> <span class="pl-c1">false</span>); </pre></div>
 
-<p>Things also have a way of being odd shaped, fuzzy around the edges or just not complete but we can live with it. So we bring [Optional] into play, it allows the element to be present or not present. Conditionally if it is present it we can ensure that is of a certain type.</p>
+<p>Things also have a way of being odd shaped, fuzzy around the edges or just not complete but we can live with it. To cater for this we bring [Optional] into play, it allows the element to be present or not present. Conditionally if it is present it can ensure that it is of a certain type. Both the wildcard and optional can be used in any position of in the pattern tuple.</p>
 
 <div class="highlight highlight-source-dart"><pre>   <span class="pl-c">/// Real life is fuzzy</span>
 
    Tuple acceptableStandard <span class="pl-k">=</span>
        <span class="pl-k">new</span> Tuple([<span class="pl-k">String</span>, <span class="pl-k">int</span>, <span class="pl-k">double</span>, Object, <span class="pl-k">new</span> Optional.of(<span class="pl-k">bool</span>)]);
-   <span class="pl-k">assert</span>(isTupleTypeMatched(payload, acceptableStandard) <span class="pl-k">==</span> <span class="pl-c1">true</span>);</pre></div>
+   <span class="pl-k">assert</span>(isTupleTypeMatched(payload, acceptableStandard) <span class="pl-k">==</span> <span class="pl-c1">true</span>);
+
+   Tuple lowerStandard <span class="pl-k">=</span> <span class="pl-k">new</span> Tuple([<span class="pl-k">String</span>, <span class="pl-k">new</span> Optional.of(<span class="pl-k">int</span>), <span class="pl-k">double</span>, <span class="pl-k">bool</span>]);
+   <span class="pl-k">assert</span>(isTupleTypeMatched(payload, lowerStandard) <span class="pl-k">==</span> <span class="pl-c1">true</span>);
+
+   Tuple differentStandard <span class="pl-k">=</span> <span class="pl-k">new</span> Tuple([<span class="pl-k">new</span> Optional.of(<span class="pl-k">String</span>), <span class="pl-k">int</span>, <span class="pl-k">double</span>, <span class="pl-k">bool</span>]);
+   <span class="pl-k">assert</span>(isTupleTypeMatched(payload, differentStandard) <span class="pl-k">==</span> <span class="pl-c1">true</span>);</pre></div>
+
+<h4>
+<a id="using-optional" class="anchor" href="#using-optional" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using Optional</h4>
+
+<p><a href="https://www.dartdocs.org/documentation/quiver_optional/1.0.0-dev.1/quiver.optional/Optional-class.html">Optional</a> is from dart Quiver Library, it denotes an optional element. The semantics of this is expected to change
+  when <a href="https://github.com/chalin/DEP-non-null">NNBD (Non-null Types &amp; Non-null By Default)</a> lands in dart. At that time Optional is expected to be deprecated from Quiver. Until then
+  we use optional in a pattern tuple to represent and element that may or not be present (it is optional!). We further use Optional.absent()
+  if we don't really care about the type or value when the element is present.</p>
+
+<p>Using optional.of(T value) we can express the rule that states, the element does not have to be in the tuple, but if it include it must
+  be of T value.</p>
+
+<p>Should you expect to use this heavily it is worth understanding the <a href="https://github.com/chalin/DEP-non-null/blob/master/doc/dep-non-null-AUTOGENERATED-DO-NOT-EDIT.md#part-migration">migration strategies</a> being currently being proposed. </p>
 
 <h3>
 <a id="limitations--alternatives" class="anchor" href="#limitations--alternatives" aria-hidden="true"><span class="octicon octicon-link"></span></a>Limitations &amp; Alternatives</h3>
@@ -199,18 +210,15 @@
 </ul>
 
 <p>If a packages should be on this list and is not, just add it via a pull request or rise an <a href="https://github.com/rayk/darpule/issues/new">issue</a>.</p>
-      </section>
-    </div>
 
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Darpule maintained by <a href="https://github.com/rayk">rayk</a></p>
-        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/rayk/darpule">Darpule</a> is maintained by <a href="https://github.com/rayk">rayk</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
       </footer>
-    </div>
 
-    
+    </section>
 
+  
   </body>
 </html>
