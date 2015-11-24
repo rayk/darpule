@@ -1,6 +1,6 @@
 name: darpule
 description: Lightweight, Robust Immutable Tuple Implementation.
-version: 0.1.0
+version: 0.1.1
 author: Ray King <taipan.king@gmail.com>
 homepage: http://rayk.github.io/darpule
 

@@ -4,6 +4,7 @@
 .project
 .pub/
 build/
+coverage/
 doc/
 packages
 pubspec.lock
@@ -20,6 +21,5 @@ doc/api/
 
 # JetBrains IDEs (WebStorm and IDEA are the recomended Dart IDEs) 
 .idea/
-*.iml
 *.ipr
 *.iws
