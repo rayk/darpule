@@ -4,11 +4,18 @@
 // Public API.
 library Predicate;
 
+import 'dart:developer';
+
 import 'package:quiver_optional/optional.dart';
 
 import 'tuple.dart';
 
 export 'package:quiver_optional/optional.dart';
+
+/// Returns the type in the optional if absent then passes back an [Object]
+Type convertOptionalToType(Optional optional) {
+  return optional.isPresent ? optional.value : Object;
+}
 
 /// Collection of the most basic predicates.
 ///
@@ -26,6 +33,31 @@ bool isDecuple(Tuple tuple) =>
 /// Can be negated with [!] operator.
 bool isDuodecuple(Tuple tuple) =>
     tuple.elementCount == TupleType.duodecuple.index ? true : false;
+
+/// Returns [true] if every element in subject is of the runtime sequence specified.
+///
+/// Treats [Object] as a wildcard. Errors when subject and pattern
+/// do not have same number of elements, except in the case where one or more
+/// elements in [pattern] is an [Optional] object type.
+///
+/// Where [pattern] contains optional and each element false a type match.
+///
+bool isEachElementMatched(Tuple subject, Tuple pattern) {
+  bool matchingResults = false;
+
+  subject.every((e) {
+          var subjectElement = e.runtimeType;
+
+          return isElementTypeMatch(
+              subjectElement, pattern[subject.indexOf(e)]);
+        })
+      ? matchingResults = true
+      : isMatchedWithInjection(subject, pattern)
+          ? matchingResults = true
+          : matchingResults = false;
+
+  return matchingResults;
+}
 
 /// Predicate that returns [true] when both tuple 1 and tuple 2 contains the same number of elements.
 ///
@@ -48,6 +80,11 @@ bool isElementTypeMatch(Type tupleElement, var patternElement) {
       : false;
 }
 
+/// Returns [true] if the first element of a Tuple is an optional.
+bool isFirstElementOptional(Tuple pattern) {
+  return pattern[0] is Optional ? true : false;
+}
+
 /// Predicate that returns [true] when the [Tuple] contains exactly eleven elements.
 ///
 /// Can be negated with [!] operator.
@@ -55,7 +92,23 @@ bool isHendecuple(Tuple tuple) =>
     tuple.elementCount == TupleType.hendecuple.index ? true : false;
 
 /// Predicate that returns [true] when the [Tuple] does not contain another tuple.
-bool isLeaf(Tuple tuple) => tuple.any((e) => isTuple(e)) ? false : true;
+bool isLeaf(var element) => isTuple(element) ? false : true;
+
+/// Returns [true] if injecting the optional value type into pattern causes the
+/// subject elements to match the pattern.
+///
+/// Handles turning the optional into a concrete so the element that is present
+/// can be compared against it.
+bool isMatchedWithInjection(Tuple subject, Tuple pattern) {
+  if (isFirstElementOptional(pattern)) {
+    List modifiedPattern = pattern();
+    var convertedType = convertOptionalToType(pattern[0]);
+    modifiedPattern.replaceRange(0, 0, [convertedType]);
+    return isEachElementMatched(subject, new Tuple(modifiedPattern));
+  } else {
+    return false;
+  }
+}
 
 /// Predicate that returns [true] when the [Tuple] contains exactly one elements.
 ///
@@ -110,54 +163,6 @@ bool isQuindecuple(Tuple tuple) =>
 /// Can be negated with [!] operator.
 bool isQuinTuple(Tuple tuple) =>
     tuple.elementCount == TupleType.quintuple.index ? true : false;
-
-/// Returns [true] if every element in subject is of the runtime sequence specified.
-///
-/// Treats [Object] as a wildcard. Errors when subject and pattern
-/// do not have same number of elements, except in the case where one or more
-/// elements in [pattern] is an [Optional] object type.
-///
-/// Where [pattern] contains optional and each element false a type match.
-///
-bool isEachElementMatched(Tuple subject, Tuple pattern) {
-  bool matchingResults = false;
-
-  subject.every((e) {
-          return isElementTypeMatch(e.runtimeType, pattern[subject.indexOf(e)]);
-        })
-      ? matchingResults = true
-      : isMatchedWithInjection(subject, pattern)
-          ? matchingResults = true
-          : matchingResults = false;
-
-  return matchingResults;
-}
-
-/// Returns [true] if injecting the optional value type into pattern causes the
-/// subject elements to match the pattern.
-///
-/// Handles turning the optional into a concrete so the element that is present
-/// can be compared against it.
-bool isMatchedWithInjection(Tuple subject, Tuple pattern) {
-  if (isFirstElementOptional(pattern)) {
-    List modifiedPattern = pattern();
-    var convertedType = convertOptionalToType(pattern[0]);
-    modifiedPattern.replaceRange(0, 0, [convertedType]);
-    return isEachElementMatched(subject, new Tuple(modifiedPattern));
-  } else {
-    return false;
-  }
-}
-
-/// Returns the type in the optional if absent then passes back an [Object]
-Type convertOptionalToType(Optional optional) {
-  return optional.isPresent ? optional.value : Object;
-}
-
-/// Returns [true] if the first element of a Tuple is an optional.
-bool isFirstElementOptional(Tuple pattern) {
-  return pattern[0] is Optional ? true : false;
-}
 
 /// Predicate that returns [true] when the [Tuple] contains exactly seven elements.
 ///
