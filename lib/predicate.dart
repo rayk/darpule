@@ -3,4 +3,4 @@
 /// The build blocks to compose criteria filters.
 library predicate;
 
-export 'src/predicate.dart';
+export 'src/predicates/base.dart';

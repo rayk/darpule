@@ -45,7 +45,8 @@ class MutabilityError implements Error {
 /// is mutable.
 class Tuple<E> extends UnmodifiableListView<E> {
   /// Generative constructor for the tuple.
-  Tuple(Iterable sourceElements) : super(sourceElements);
+  Tuple(Iterable sourceElements)
+      : super(new List.from(sourceElements, growable: false));
 
   /// Returns the number of elements in this tuple.
   /// As [Optional] is not consider to be present until it is not absent
@@ -165,7 +166,7 @@ enum TupleType {
   /// Tuple with three and only four elements.
   quadruple,
 
-  /// Tuple with three and only five elements.
+  /// Tuple with five and only five elements.
   quintuple,
 
   /// Tuple with three and only six elements.
@@ -174,10 +175,10 @@ enum TupleType {
   /// Tuple with three and only seven elements.
   septuple,
 
-  /// Tuple with three and only eight elements.
+  /// Tuple with eight and only eight elements.
   octuple,
 
-  /// Tuple with three and only nine elements.
+  /// Tuple with nine and only nine elements.
   nonuple,
 
   /// Tuple with three and only ten elements.

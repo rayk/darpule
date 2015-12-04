@@ -3,6 +3,7 @@ import 'package:darpule/predicate.dart';
 import 'package:darpule/tuple.dart';
 import 'package:quiver/collection.dart';
 import 'dart:async';
+import 'package:test/test.dart';
 
 main() async {
   Tuple layer0,
@@ -36,6 +37,10 @@ main() async {
   optionalDouble = new Optional.of(double);
   optionalWild = new Optional.absent();
 
+  Tuple tup3Cri = new Tuple([String, bool, bool, bool]);
+  Tuple tup2Cri = new Tuple([int, bool, bool, int]);
+  Tuple tup1Cri = new Tuple([String, String, int]);
+
   layer4TypeF = new Tuple([bool, String, int, double, int]);
   layer4TypeE = new Tuple([int, bool, String, int, double]);
   layer4TypeD = new Tuple([double, int, bool, String, int]);
@@ -44,7 +49,7 @@ main() async {
   layer4TypeA = new Tuple([Object, Object, optionalBool, bool]);
 
   layer3TypeE = new Tuple([layer4TypeE, bool, layer4TypeF]);
-  layer3TypeD = new Tuple([Tuple, Object, optionalBool, int, layer4TypeD]);
+  layer3TypeD = new Tuple([tup2Cri, Object, optionalBool, int, layer4TypeD]);
   layer3TypeC = new Tuple([int, bool, layer4TypeC]);
   layer3TypeB = new Tuple([optionalWild, int, bool, layer4TypeB]);
   layer3TypeA = new Tuple([double, optionalBool, int, int, layer4TypeA]);
@@ -61,7 +66,7 @@ main() async {
   layer1TypeA =
       new Tuple([String, String, Object, int, double, bool, layer2TypeD]);
 
-  layer0 = new Tuple([layer1TypeA, layer1TypeB, layer1TypeC, String, Tuple]);
+  layer0 = new Tuple([layer1TypeA, layer1TypeB, layer1TypeC, String, tup3Cri]);
 
   Tuple l1TA,
       l1TB,
@@ -118,67 +123,24 @@ main() async {
       ['rockets', 'fountains', 'wild object string', 2829, 92.34, false, l2TD]);
   Tuple subjectRoot = new Tuple([l1TA, l1TB, l1TC, 'String of words', tup3]);
 
-  Tuple criteria = new Tuple([String, int, bool, Tuple]);
-  Tuple subject = new Tuple(['String Element', 3838, true, tup3]);
+
+
+  Tuple criteria = new Tuple([String, tup2Cri, int, bool, tup3Cri]);
+  Tuple subject = new Tuple(['String Element Text Sample', tup2, 3838, true, tup3]);
 
   isTupleMatching(criteria, subject).then((bool result) {
-    print(result);
+    print('**** Matching Result: $result ****');
   });
+
+  Tuple cri = new Tuple([String, new Optional.of(int)]);
+
+  print(cri[1].runtimeType);
+
+  print(cri.where((e) => e is Optional));
 }
 
-Future<bool> isTupleMatching(Tuple criteria, Tuple subject) async {
-  print('- isTupleMatching called for  ${subject.toString()}');
-
-  return isElementCountEqual(criteria, subject)
-      ? await isEachElementMatching(criteria, subject)
-      : false;
-}
-
-Future<bool> isEachElementMatching(Tuple criteria, Tuple subject) async {
-
-  print("- isEachElement Matching was given $subject");
-
-  List elementTestResults = new List(subject.length);
-
-  bool notCompleted() => elementTestResults.contains(null) ? true : false;
-
-  bool misMatchNotFound() => elementTestResults.contains(false) ? false : true;
-
-
-    for (int i = 0; i < subject.length; i++) {
-      var criterion = criteria[i];
-      var element = subject[i];
-
-      if (isTuple(criterion)) {
-        print('- Tuple Element Detected');
-        elementTestResults[i] = await isTupleMatching(criterion, element);
-      } else {
-        print('- Matchable Element Detected ${criterion}');
-        elementTestResults[i] = await isElementMatching(criterion, element);
-      }
-    }
-
-
-  return elementTestResults.contains(false) ? false : true;
-}
-
-/// Takes care of the matching of a single element.
-Future<bool> isElementMatching(var criterion, var element) async {
 
 
 
-  if (criterion is Type) {
-    return criterion == element.runtimeType ? true : false;
-  }
 
-  if (criterion is Function) {
-    return criterion(element) ? true : false;
-  }
 
-  if (criterion is Pattern && element is String) {
-    Iterable<Match> matches = element.allMatches(criterion);
-    return matches.isNotEmpty ? true : false;
-  }
-
-  return criterion == element ? true : false;
-}
