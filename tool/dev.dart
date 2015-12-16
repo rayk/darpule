@@ -11,7 +11,7 @@ main(List<String> args) async {
   // config.analyze
   // config.copyLicense
   // config.coverage
-  // config.docs
+  config.docs;
   // config.examples
   // config.format
   // config.test

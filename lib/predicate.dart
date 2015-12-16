@@ -1,6 +1,6 @@
-/// #The Standard Predicate Library.
+/// Asserts facts about a Tuple and it's elements.
 ///
-/// The build blocks to compose criteria filters.
+/// These are building blocks for more sophisticated filters and matchers.  .
 library predicate;
 
-export 'src/predicates/base.dart';
+export 'src/predicates/predicate.dart';

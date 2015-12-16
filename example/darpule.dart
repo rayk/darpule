@@ -3,8 +3,8 @@
 
 library darpule.example;
 
-import 'package:darpule/src/predicate.dart';
-import 'package:darpule/src/tuple.dart';
+import 'package:darpule/predicate.dart';
+import 'package:darpule/tuple.dart';
 
 main() {
   /// Created very ad-hoc.

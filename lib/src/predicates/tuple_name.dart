@@ -1,4 +1,4 @@
-part of Predicates;
+part of predicate;
 
 /// Predicate that returns [true] when the [Tuple] contains exactly ten elements.
 ///

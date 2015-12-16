@@ -1,6 +1,6 @@
 library darpule.test.predicate.attribute;
 
-import 'package:darpule/src/predicates/base.dart';
+import 'package:darpule/src/predicates/predicate.dart';
 import 'package:darpule/tuple.dart';
 import 'package:quiver_optional/optional.dart';
 import 'package:test/test.dart';

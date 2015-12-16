@@ -10,6 +10,8 @@ import 'package:quiver/collection.dart';
 import 'package:quiver_hashcode/hashcode.dart';
 import 'package:quiver_optional/optional.dart';
 
+export 'package:quiver_optional/optional.dart';
+
 /// Return a [Tuple] with the types of each element of the [subjectTuple].
 ///
 /// This function is used in in pattern matching types in a tuple.
@@ -55,6 +57,11 @@ class Tuple<E> extends UnmodifiableListView<E> {
   int get elementCount {
     return this.length - _optionalElementCount();
   }
+
+  TupleIterator get iterator{
+    return new TupleIterator(this);
+  }
+
 
   // Return number of optional types in tuple so they can excluded
   // from the element count.
@@ -136,6 +143,47 @@ class Tuple<E> extends UnmodifiableListView<E> {
   int _optionalElementCount() {
     var count = this.where((e) => e.runtimeType == Optional);
     return count.length;
+  }
+}
+
+/// Provides a Tuple element one at time.
+class TupleIterator extends BidirectionalIterator {
+  var currentElement = null;
+  int tupleLength = 0;
+  int pointer;
+  Tuple subject;
+
+  TupleIterator(Tuple this.subject) {
+    tupleLength = subject.length;
+    pointer = -1;
+  }
+
+  // Returns the index of the current element in the tuple.
+  get current => currentElement;
+
+  // Returns the current element from the Tuple.
+  int get index => pointer;
+
+  @override
+  bool moveNext() => _isPointerAtEnd() ? false : _loadNextElement();
+
+  @override
+  bool movePrevious() => _isPointerAtStart() ? false : _loadPreviousElement();
+
+  @override
+  String toString() => 'TupleIterator';
+
+  bool _isPointerAtEnd() => pointer == tupleLength - 1 ? true : false;
+  bool _isPointerAtStart() => pointer == 0 ? true : false;
+  bool _loadNextElement() {
+    pointer++;
+    currentElement = subject[pointer];
+    return true;
+  }
+  bool _loadPreviousElement(){
+    pointer--;
+    currentElement = subject[pointer];
+    return true;
   }
 }
 
