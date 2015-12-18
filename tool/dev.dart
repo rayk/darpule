@@ -21,7 +21,6 @@ main(List<String> args) async {
   config.format.directories = ['lib/', 'example/', 'tool/'];
 
   config.test.unitTests = ['test/unit/'];
-  config.test.integrationTests = ['test/integration/'];
 
   await dev(args);
 }

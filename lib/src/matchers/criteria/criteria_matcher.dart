@@ -4,8 +4,6 @@ import 'package:darpule/matcher.dart';
 import 'package:darpule/predicate.dart';
 import 'package:darpule/tuple.dart';
 
-
-
 import 'package:darpule/src/matchers/criteria/combiner/combine.dart';
 
 part 'matrix_projection.dart';
@@ -15,13 +13,10 @@ part 'matrix_projection.dart';
 /// element position, in the criteriaTuple.          criteria
 typedef bool CriteriaMatrix(int elementPosition, var elementValue);
 
-
-
 /// Generate a matrix of all the possible sequence of matchers.
 ///
 /// This is only done once at when a criteria matcher is created.
 Map generateMatchMatrix(Tuple criteria) {
-
   Map matrix = new Map();
   List matcherSequence = selectMatchers(criteria);
   List<int> mandatories = mandatoryCriterionPositions(criteria);

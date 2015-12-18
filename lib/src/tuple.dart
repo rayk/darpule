@@ -68,23 +68,25 @@ class Tuple<E> extends UnmodifiableListView<E> {
   /// Returns a new Tuple with passed in Tuple spliced into this Tuple.
   ///
   /// Preserving the passed Tuple type.
-  Tuple intoSplice(Tuple otherTuple, Function insertionPosition, {bool before: true}) {
-    int insertPoint = this.indexOf(this.firstWhere((e) => insertionPosition(e)));
+  Tuple intoSplice(Tuple otherTuple, Function insertionPosition,
+      {bool before: true}) {
+    int insertPoint =
+        this.indexOf(this.firstWhere((e) => insertionPosition(e)));
     List thisContent = this();
     List splice = otherTuple();
-    thisContent.insert((before ? insertPoint : insertPoint +1), new Tuple(splice));
+    thisContent.insert(
+        (before ? insertPoint : insertPoint + 1), new Tuple(splice));
     return new Tuple(thisContent);
   }
 
   /// Returns a new tuple with the content from the tuple append to the end
   /// of this tuple. The pass in Tuple is not preserved, we just melt away the
   /// first layer of.
-  Tuple concatWith(Tuple otherTuple){
+  Tuple concatWith(Tuple otherTuple) {
     Iterable appendContent = otherTuple();
     List thisContent = this();
     thisContent.insertAll(this.length, appendContent);
     return new Tuple(thisContent);
-
   }
 
   @override

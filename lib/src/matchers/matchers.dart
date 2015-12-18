@@ -62,9 +62,9 @@ ElementMatcher mapValueMatcher(Map mapCriterion) {
   return matcher;
 }
 
-ElementMatcher tupleValueMatcher(Tuple embeddedTupleCriteria){
+ElementMatcher tupleValueMatcher(Tuple embeddedTupleCriteria) {
   Map matrix = generateMatchMatrix(embeddedTupleCriteria);
-  bool matcher(Tuple subject){
+  bool matcher(Tuple subject) {
     return subjectMatchesCriteria(matrix, subject) ? true : false;
   }
   return matcher;

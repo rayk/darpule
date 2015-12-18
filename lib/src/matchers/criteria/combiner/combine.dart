@@ -97,7 +97,8 @@ List _combination(int k, int r, List elements) {
     d = _nCr(n - position - 1, r - 1);
   }
 
-  if (r == 0) return [];
+  if (r == 0)
+    return [];
   else {
     List tail = elements.sublist(position + 1);
     return [elements[position]]..addAll(_combination(k, r - 1, tail));

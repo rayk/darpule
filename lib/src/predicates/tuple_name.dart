@@ -12,7 +12,6 @@ bool isDecuple(Tuple tuple) =>
 bool isDuodecuple(Tuple tuple) =>
     tuple.elementCount == TupleType.duodecuple.index ? true : false;
 
-
 /// Predicate that returns [true] when the [Tuple] contains exactly eleven elements.
 ///
 /// Can be negated with [!] operator.

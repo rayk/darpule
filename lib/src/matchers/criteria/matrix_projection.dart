@@ -8,7 +8,6 @@ part of criteriaMatch;
 /// to this a criteria can mix and match any criterion types. So we work from
 /// most specific to least specific.
 List selectMatchers(Tuple criteria) {
-
   List elementMatchers = [];
   bool matcherNotSelected;
 
@@ -45,7 +44,6 @@ List selectMatchers(Tuple criteria) {
           : isCollectionTypeMap(criterion)
               ? mapTypeMatcher(criterion)
               : setTypeMatcher(criterion);
-
 
   for (var criterion in criteria) {
     matcherNotSelected = true;
@@ -112,4 +110,3 @@ List<int> viableSubjectLengths(Tuple criteriaTuple) {
       criteriaTuple.length - criteriaTuple.elementCount + 1,
       (idx) => idx + criteriaTuple.elementCount);
 }
-

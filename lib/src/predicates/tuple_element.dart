@@ -56,7 +56,7 @@ bool isPattern(var element) {
 bool isAType(var element) => element is Type ? true : false;
 
 /// Returns true when the element if a Boolean value.
-bool isValueBoolean(var element){
+bool isValueBoolean(var element) {
   return element is bool ? true : false;
 }
 
@@ -79,7 +79,7 @@ bool isTypeOptional(var element) {
 bool isTypeTuple(Type element) => element == Tuple;
 
 /// Returns true when element contains a type of [Object], used as a mandatory wild.
-bool isTypeWild(var element) => element != Type  ? true : false;
+bool isTypeWild(var element) => element != Type ? true : false;
 
 bool isTypeWildMandatory(var element) {
   return element == Type ? true : false;
@@ -114,8 +114,7 @@ bool isValueRunnable(var element) =>
 bool isValueTuple(var element) => element is Tuple ? true : false;
 
 bool isValueWildMandatory(var element) {
-  return
-      element == Object &&
+  return element == Object &&
       !isTypeOptional(element) &&
       !isValueOptional(element) &&
       element != Optional ? true : false;
