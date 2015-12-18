@@ -11,7 +11,7 @@ main(List<String> args) async {
   // config.analyze
   // config.copyLicense
   // config.coverage
-  // config.docs
+  config.docs;
   // config.examples
   // config.format
   // config.test
@@ -21,7 +21,6 @@ main(List<String> args) async {
   config.format.directories = ['lib/', 'example/', 'tool/'];
 
   config.test.unitTests = ['test/unit/'];
-  config.test.integrationTests = ['test/integration/'];
 
   await dev(args);
 }

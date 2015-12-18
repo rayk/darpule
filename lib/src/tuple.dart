@@ -1,8 +1,3 @@
-// Copyright (c) 2015, Ray King All rights reserved. Use of this source code
-// is governed by a BSD-style license that can be found in the LICENSE file.
-
-// Public API.
-
 library Tuple;
 
 import 'package:collection/wrappers.dart';
@@ -45,7 +40,8 @@ class MutabilityError implements Error {
 /// is mutable.
 class Tuple<E> extends UnmodifiableListView<E> {
   /// Generative constructor for the tuple.
-  Tuple(Iterable sourceElements) : super(sourceElements);
+  Tuple(Iterable sourceElements)
+      : super(new List.from(sourceElements, growable: false));
 
   /// Returns the number of elements in this tuple.
   /// As [Optional] is not consider to be present until it is not absent
@@ -55,15 +51,43 @@ class Tuple<E> extends UnmodifiableListView<E> {
     return this.length - _optionalElementCount();
   }
 
-  // Return number of optional types in tuple so they can excluded
-  // from the element count.
   @override
   int get hashCode {
     return hashObjects(this.call());
   }
 
+  // Return number of optional types in tuple so they can excluded
+  // from the element count.
+  TupleIterator get iterator {
+    return new TupleIterator(this);
+  }
+
   /// Returns the enumerated type name of the tuple.
   TupleType get type => TupleType.values[elementCount];
+
+  /// Returns a new Tuple with passed in Tuple spliced into this Tuple.
+  ///
+  /// Preserving the passed Tuple type.
+  Tuple intoSplice(Tuple otherTuple, Function insertionPosition,
+      {bool before: true}) {
+    int insertPoint =
+        this.indexOf(this.firstWhere((e) => insertionPosition(e)));
+    List thisContent = this();
+    List splice = otherTuple();
+    thisContent.insert(
+        (before ? insertPoint : insertPoint + 1), new Tuple(splice));
+    return new Tuple(thisContent);
+  }
+
+  /// Returns a new tuple with the content from the tuple append to the end
+  /// of this tuple. The pass in Tuple is not preserved, we just melt away the
+  /// first layer of.
+  Tuple concatWith(Tuple otherTuple) {
+    Iterable appendContent = otherTuple();
+    List thisContent = this();
+    thisContent.insertAll(this.length, appendContent);
+    return new Tuple(thisContent);
+  }
 
   @override
   bool operator ==(o) {
@@ -138,6 +162,48 @@ class Tuple<E> extends UnmodifiableListView<E> {
   }
 }
 
+/// Provides a Tuple element one at time.
+class TupleIterator extends BidirectionalIterator {
+  var currentElement = null;
+  int tupleLength = 0;
+  int pointer;
+  Tuple subject;
+
+  TupleIterator(Tuple this.subject) {
+    tupleLength = subject.length;
+    pointer = -1;
+  }
+
+  // Returns the index of the current element in the tuple.
+  get current => currentElement;
+
+  // Returns the current element from the Tuple.
+  int get index => pointer;
+
+  @override
+  bool moveNext() => _isPointerAtEnd() ? false : _loadNextElement();
+
+  @override
+  bool movePrevious() => _isPointerAtStart() ? false : _loadPreviousElement();
+
+  @override
+  String toString() => 'TupleIterator';
+
+  bool _isPointerAtEnd() => pointer == tupleLength - 1 ? true : false;
+  bool _isPointerAtStart() => pointer == 0 ? true : false;
+  bool _loadNextElement() {
+    pointer++;
+    currentElement = subject[pointer];
+    return true;
+  }
+
+  bool _loadPreviousElement() {
+    pointer--;
+    currentElement = subject[pointer];
+    return true;
+  }
+}
+
 /// Tuple types, enumeration of tuple type names contains zero to sixteen elements.
 ///
 /// Provided are not only the constant types, the ordering is aligned so the index
@@ -165,7 +231,7 @@ enum TupleType {
   /// Tuple with three and only four elements.
   quadruple,
 
-  /// Tuple with three and only five elements.
+  /// Tuple with five and only five elements.
   quintuple,
 
   /// Tuple with three and only six elements.
@@ -174,10 +240,10 @@ enum TupleType {
   /// Tuple with three and only seven elements.
   septuple,
 
-  /// Tuple with three and only eight elements.
+  /// Tuple with eight and only eight elements.
   octuple,
 
-  /// Tuple with three and only nine elements.
+  /// Tuple with nine and only nine elements.
   nonuple,
 
   /// Tuple with three and only ten elements.

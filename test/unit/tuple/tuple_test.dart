@@ -10,7 +10,7 @@ import 'package:quiver_optional/optional.dart';
 /// Boring repetitive test that provide the baseline guarantees as to tuple behaviour.
 
 main() {
-  group("Tuple Creation:\t", () {
+  group("Tuple Creation:     \t", () {
     String element0 = "Mountain Ranges";
     int element1 = 3920;
     double element2 = 29023.12;
@@ -392,7 +392,7 @@ main() {
     });
   });
 
-  group('Tuple Hashing:\t', () {
+  group('Tuple Hashing:     \t', () {
     test('Should always return the same hash for same tuple.', () {
       Tuple testTuple = new Tuple(['Horse', 323, 2342.23]);
       var hashcode1 = testTuple.hashCode;
@@ -414,7 +414,7 @@ main() {
     });
   });
 
-  group('Tuple Equals:\t', () {
+  group('Tuple Equals:    \t', () {
     test('Should not be equal if the number of elements is different.', () {
       Tuple testTuple1 = new Tuple(["City", 'Wind', 3490]);
       Tuple testTuple2 = new Tuple(['City', 'Willow', 3489, 234.12]);
@@ -440,14 +440,14 @@ main() {
     });
   });
 
-  group('Element Types:\t', () {
+  group('Element Types:    \t', () {
     test('Should return the element types.', () {
       Tuple testTuple = new Tuple(['Shark', true, 393, 'water']);
       expect(elementTypesOf(testTuple), equals([String, bool, int, String]));
     });
   });
 
-  group('Tuple Mutability:\t', () {
+  group('Tuple Mutability:  \t', () {
     test('Should throw mutability error on add().', () {
       Tuple testTuple = new Tuple([
         'Leftwing',
@@ -538,5 +538,59 @@ main() {
           equals(
               "TupleType.septuple - [Bear, snow, water, 34.23, 2, views, food]"));
     });
+  });
+
+  group('Tuple Iterable:    \t', () {
+    test('Should return a Iterator where the current is null.', () {
+      Tuple testTup = new Tuple([false, true, 23892]);
+      Iterator tupIt = new TupleIterator(testTup);
+      expect(tupIt.current, isNull);
+    });
+
+    test('Should move to next element.', () {
+      Tuple testTup = new Tuple([true, false, 349034, 'greenfields']);
+      TupleIterator tupIt = testTup.iterator;
+      expect(tupIt is Iterator, isTrue);
+      expect(tupIt.moveNext(), isTrue);
+      expect(tupIt.current, equals(true));
+      expect(tupIt.index, equals(0));
+      expect(tupIt.moveNext(), isTrue);
+      expect(tupIt.current, equals(false));
+      expect(tupIt.index, equals(1));
+      expect(tupIt.moveNext(), isTrue);
+      expect(tupIt.current, equals(349034));
+      expect(tupIt.index, equals(2));
+      expect(tupIt.moveNext(), isTrue);
+      expect(tupIt.current, equals('greenfields'));
+      expect(tupIt.index, equals(3));
+      expect(tupIt.moveNext(), isFalse);
+      expect(tupIt.current, equals('greenfields'));
+      expect(tupIt.index, equals(3));
+    });
+
+    test('Should move to previous element.',() {
+      Tuple testTup = new Tuple ([false, true, 349, 'colors']);
+      TupleIterator tupIt = testTup.iterator;
+      tupIt.moveNext();
+      tupIt.moveNext();
+      tupIt.moveNext();
+      tupIt.moveNext();
+      expect(tupIt.index, equals(3));
+      expect(tupIt.current, equals('colors'));
+      expect(tupIt.movePrevious(), isTrue);
+      expect(tupIt.index, equals(2));
+      expect(tupIt.current, equals(349));
+      expect(tupIt.movePrevious(), isTrue);
+      expect(tupIt.index, equals(1));
+      expect(tupIt.current, equals(true));
+      expect(tupIt.movePrevious(), isTrue);
+      expect(tupIt.index, equals(0));
+      expect(tupIt.current, equals(false));
+      expect(tupIt.movePrevious(), isFalse);
+      expect(tupIt.current, equals(false));
+      expect(tupIt.index, equals(0));
+    });
+
+
   });
 }

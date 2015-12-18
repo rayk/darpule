@@ -3,128 +3,169 @@
 
 library darpule.example;
 
-import 'package:darpule/src/predicate.dart';
-import 'package:darpule/src/tuple.dart';
+import 'package:darpule/tuple.dart';
+import 'package:darpule/matcher.dart';
+import 'package:darpule/predicate.dart';
 
 main() {
-  /// Created very ad-hoc.
-
-  List resultFromSomeWhere = ['Longhaul', 382, 982.23, false];
-
-  Tuple payload = new Tuple(resultFromSomeWhere);
-
-  assert(payload is Tuple);
-  assert(payload.type == TupleType.quadruple);
-  assert(payload.elementCount == 4);
-
-  /// Tuple can hold anything.
-  Tuple collective = new Tuple([
+  /// Easy ad-hoc creation, fill them as you like.
+  Tuple signal01 = new Tuple([2837, 283.23, true, '934893-23XA', false]),
+      signal02 =
+      new Tuple([true, new DateTime.now(), 49893, 'saber3903', false, 401.34]),
+      signal03 = new Tuple([]),
+      signal04 = new Tuple([3043.398, true, true, false, 'black', 90934, true]),
+      signal05 = new Tuple([
+    'SouthPort',
     true,
-    new Tuple([343, false]),
-    new DateTime.now()
+    [394, 3403, 3493, 2303]
   ]);
 
-  assert(collective is Tuple);
-  assert(collective.type == TupleType.triple);
+  assert(signal01 is Tuple && signal01.type == TupleType.quintuple);
+  assert(signal02 is Tuple && signal02.type == TupleType.sextuple);
+  assert(signal03 is Tuple && signal03.type == TupleType.nulluple);
+  assert(signal04 is List && signal04.type == TupleType.septuple);
+  assert(signal05 is Tuple && signal05.type == TupleType.triple);
 
-  /// Hash and Equals behaviour
+  assert(signal01[0] == 2837);
 
-  assert(collective != payload);
-
-  Tuple sameContent1 = new Tuple([3902, 'happy']);
-  Tuple sameContent2 = new Tuple([3902, 'happy']);
-
-  assert(sameContent1 == sameContent2); // They have same elements.
-  assert(identical(sameContent1, sameContent2) == false); // But are unique.
-
-  Tuple notSameContent = new Tuple([8827, 'sad']);
-
-  Tuple deepLikeness = new Tuple(['skindeep', sameContent1]);
-  Tuple deeperLikeness = new Tuple(['skindeep', sameContent1]);
-  Tuple downDeep = new Tuple(['skindeep', notSameContent]);
-
-  assert(deepLikeness == deeperLikeness);
-  assert(downDeep != deepLikeness);
-
-  /// Tuple is Immutable, trying results in an programming error.
-
+  /// No changes on the down low.
   try {
-    payload.add('WantToAddElement');
-  } catch (error) {
-    assert(error is MutabilityError);
+    signal01.removeAt(0);
+  } catch (e) {
+    assert(e is MutabilityError);
   }
 
+  /// Nothing has change.
+  assert(signal01.type == TupleType.quintuple);
+
+  /// Adding is also a change
   try {
-    payload.addAll(['doctor', 'drugs']);
-  } catch (error) {
-    assert(error is MutabilityError);
+    signal03.addAll([0, true, 'hello']);
+  } catch (e) {
+    assert(e is MutabilityError);
   }
 
-  try {
-    payload.removeAt(0);
-  } catch (error) {
-    assert(error is MutabilityError);
+  /// Grab the content leaving the original untouched.
+
+  int signal04BeforeHash = signal04.hashCode;
+  var signal04Contents = signal04(); // Call it like a function and it dumps
+  assert(signal04Contents is List);
+  assert(signal04Contents.length == signal04.length);
+  assert(signal04.every((e) => signal04Contents.contains(e)));
+  assert(signal04Contents.every((e) => signal04.contains(e)));
+  int signal04AfterHash = signal04.hashCode;
+  assert(signal04AfterHash == signal04BeforeHash);
+
+  /// Each Tuple plays well with others.
+
+  assert(signal01 != signal02);
+  assert(signal05.toString() ==
+      'TupleType.triple - [SouthPort, true, [394, 3403, 3493, 2303]]');
+  assert(signal05.hashCode == signal05.hashCode);
+  assert(signal01.iterator.moveNext());
+  var inTheTuple = signal01.iterator;
+  assert(inTheTuple is TupleIterator);
+  assert(inTheTuple.moveNext() == true);
+  assert(inTheTuple.current == 2837);
+  assert(inTheTuple.moveNext() == true);
+  assert(inTheTuple.current == 283.23);
+  assert(inTheTuple.movePrevious() == true);
+  assert(inTheTuple.current == 2837);
+  assert(inTheTuple.index == 0);
+
+  /// Inserting and Appending with picking and counting
+
+  Tuple signalPartA =
+      new Tuple(['38493-23XJ', 34034, false, 382.34, 'counter-service']),
+      signalPartB = new Tuple(['south', 384, 823, 399, true]);
+
+  Tuple completedSignal1 = signalPartA.intoSplice(signalPartB, isValueBoolean);
+
+  print(completedSignal1.toString());
+
+  Tuple completedSignal2 =
+      signalPartA.intoSplice(signalPartB, isValueBoolean, before: false);
+
+  print(completedSignal2.toString());
+
+  /// Append and wash away it's identity.
+
+  Tuple completedSignal3 = signalPartA.concatWith(signalPartB);
+
+  print(completedSignal3.toString());
+
+  /// Equals is not skin deep.
+
+  Tuple signal06 = new Tuple([true, 23984, false]),
+      signal07 = new Tuple([true, 23984, false]),
+      signal08 = new Tuple([signal04, signal06]),
+      signal09 = new Tuple([
+    new Tuple([3043.398, true, true, false, 'black', 90934, true]),
+    new Tuple([true, 23984, false])
+  ]),
+      signal10 = new Tuple([
+    new Tuple([3043.398, true, false, false, 'black', 90934, true]),
+    new Tuple([true, 999999, false])
+  ]),
+      signal11 =
+      new Tuple([true, new DateTime.now(), 49893, 'saber3903', false, 401.34]);
+
+  assert(signal06 == signal07);
+  assert(!identical(signal06, signal07));
+  assert(signal08 == signal09);
+  assert(signal10 != signal09);
+
+  /// We need to be discerning about our tuple, lets define a criteria.
+
+  Tuple validGateSignalCriteria = new Tuple([int, double, bool, String, bool]);
+
+  TupleMatcher isValidGateSignal = criteriaMatcher(validGateSignalCriteria);
+
+  assert(isValidGateSignal(signal01));
+  assert(!isValidGateSignal(signal09));
+
+  /// Sometime Types are not enough and some literals appears.
+
+  Tuple packageTrackingCriteria =
+      new Tuple([double, bool, bool, bool, 'black', int, bool]);
+
+  TupleMatcher isPackageTrackable = criteriaMatcher(packageTrackingCriteria);
+
+  assert(isPackageTrackable(signal04));
+  assert(!isPackageTrackable(signal09));
+
+  /// Other times it could a threshold that triggers thing off.
+
+  Function thresholdTrigger(double limit) {
+    bool matcher(double value) => value > limit ? true : false;
+    return matcher;
   }
 
-  /// Ways to get a tuple elements
+  Tuple trackingTemperatureTrigger =
+      new Tuple([bool, DateTime, int, String, bool, thresholdTrigger(399.00)]);
 
-  assert(collective[0] == true); // Using element position number.
+  TupleMatcher isTrackableTempOverRange =
+      criteriaMatcher(trackingTemperatureTrigger);
 
-  List tupleContent = notSameContent(); // Call your tuple like a function.
+  assert(isTrackableTempOverRange(signal02));
+  assert(!isPackageTrackable(signal11));
 
-  assert(tupleContent[0] == 8827 && tupleContent[1] == 'sad');
+  /// When things become conditional using optional can get you out of hole.
 
-  tupleContent.add('Now we can mutate the resulting list');
+  Tuple trackCriteria = new Tuple(
+      [String, new Optional.of(int), new Optional.of(true), bool, double]);
 
-  Tuple notSameContentWithMore = new Tuple(tupleContent); // Back to a tuple.
+  Tuple signal12_trackable = new Tuple(['3892-X8349', false, 393.00]),
+      signal13_trackable = new Tuple(['90234-Y83', 34948, true, 84.23]),
+      signal14_trackable = new Tuple(['34901-B39', 323, true, false, 23.32]),
+      signal15_notTrackage = new Tuple(['29023-12', false, true, 30.23]),
+      signal16_notTrackage = new Tuple(['230-OU3', 23, false, true, 23.23]);
 
-  assert(notSameContentWithMore is Tuple);
-  assert(notSameContent.type == TupleType.pairple);
-  assert(notSameContentWithMore.type == TupleType.triple);
+  TupleMatcher isTrackable = criteriaMatcher(trackCriteria);
 
-  Tuple payloadElementTypes = elementTypesOf(payload);
-
-  assert(payloadElementTypes[0] == String);
-  assert(payloadElementTypes[1] == int);
-  assert(payloadElementTypes[2] == double);
-  assert(payloadElementTypes[3] == bool);
-
-  /// Predicate can help you answer some questions about the Tuple.
-
-  assert(isSepTuple(payload) == false); // No it does not have 7 elements.
-  assert(isQuadruple(payload) == true); // Yes it does have 4 elements
-  assert(isSexdecuple(payload) == false); // No it does not have 16 elements.
-  assert(isLeaf(deepLikeness) == false); // No one of elements is a Tuple.
-  assert(isLeaf(sameContent1) == true); // Yes, no other tuple are inside.
-
-  /// Looking inside for a pattern.
-
-  Tuple strictPattern = new Tuple([String, int, double, bool]);
-  Tuple loosePattern = new Tuple([String, Object, double, Object]);
-
-  assert(isTupleTypeMatched(payload, strictPattern) == true);
-  assert(isTupleTypeMatched(payload, loosePattern) == true);
-
-  /// Sometimes you don't get what you want.
-
-  Tuple expectedTuplePattern = new Tuple([String, int, int, bool]);
-  assert(isTupleTypeMatched(payload, expectedTuplePattern) == false);
-
-  /// Sometimes you don't get enough of what you want.
-
-  Tuple veryLoosePattern = new Tuple([Object, Object, Object, Object, Object]);
-  assert(isTupleTypeMatched(payload, veryLoosePattern) == false);
-
-  /// Real life is fuzzy
-
-  Tuple acceptableStandard =
-      new Tuple([String, int, double, Object, new Optional.of(bool)]);
-  assert(isTupleTypeMatched(payload, acceptableStandard) == true);
-
-  Tuple lowerStandard = new Tuple([String, new Optional.of(int), double, bool]);
-  assert(isTupleTypeMatched(payload, lowerStandard) == true);
-
-  Tuple differentStandard =
-      new Tuple([new Optional.of(String), int, double, bool]);
-  assert(isTupleTypeMatched(payload, differentStandard) == true);
+  assert(isTrackable(signal12_trackable));
+  assert(isTrackable(signal13_trackable));
+  assert(isTrackable(signal14_trackable));
+  assert(!isTrackable(signal15_notTrackage));
+  assert(!isTrackable(signal16_notTrackage));
 }
