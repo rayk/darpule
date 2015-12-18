@@ -2,56 +2,35 @@ library darpule.matchers.combiner;
 
 import 'package:darpule/tuple.dart';
 
-main() {
-  List matchers = [
-    'op1',
-    'man1',
-    'op2',
-    'man2',
-    'op3',
-    'op4',
-    'man3',
-    'man4',
-    'man5',
-    'op5',
-    'op6'
-  ];
+// Clean up needed..
 
-  var c = new Combinations(6, matchers);
+List combine(int sequenceLength, Tuple criteria, List mandatoryElements) {
+  assert(mandatoryElements.length <= criteria.length);
+  List result = [];
+  List criteriaElements =
+      new List.generate(criteria.length, (int element) => element++);
+  var allCombinations = new Combinations(sequenceLength, criteriaElements);
 
-  print(c);
-  print(c[10]);
-  print(c[11]);
-  print(c[12]);
+  assert(allCombinations.length > 0);
 
-  print(c.length);
+  for (int i = 0; i < allCombinations.length; i++) {
+    List selectedCombination = new List.from(allCombinations[i]);
+    assert(selectedCombination.length == sequenceLength);
+    int mandatoryCounter = 0;
 
-  List mand = ['man1', 'man2', 'man3', 'man4', 'man5'];
-
-  List finalSeq = new List();
-
-  for (int i = 0; i < c.length; i++) {
-    List seq = new List.from(c[i]);
-    int qualifier = 0;
-    for (int o = 0; o < mand.length; o++) {
-      if (seq.contains(mand[o])) {
-        qualifier++;
+    for (int c = 0; c < mandatoryElements.length; c++) {
+      if (selectedCombination.contains(mandatoryElements[c])) {
+        mandatoryCounter++;
       }
     }
-    if (qualifier == mand.length) {
-      finalSeq.add(c[i]);
+
+    if (mandatoryCounter == mandatoryElements.length) {
+      result.add(selectedCombination);
     }
   }
 
-  print(finalSeq.length);
-  print(finalSeq);
+  return result;
 }
-
-List combine(int sequenceLength, Tuple criteria, Tuple mandatoryElements){
-
-}
-
-
 
 abstract class _Combinatorics {
   List _elements;
@@ -77,7 +56,6 @@ abstract class _Combinatorics {
     if (to == -1) to = length;
     return new List.generate(to - from, (int i) => this[from + i]);
   }
-
 }
 
 class Combinations extends _Combinatorics {
@@ -86,7 +64,6 @@ class Combinations extends _Combinatorics {
   /// The number of items taken from [elements].
   int get r => _r;
 
-
   Combinations(int r, List elements) {
     assert(r >= 0 && r <= elements.length);
     _elements = new List.from(elements);
@@ -94,11 +71,8 @@ class Combinations extends _Combinatorics {
     _length = _nCr(elements.length, r);
   }
 
-  @override List operator [](int k) => _combination(
-      _adjustedIndex(k, length),
-      r,
-      elements
-  );
+  @override List operator [](int k) =>
+      _combination(_adjustedIndex(k, length), r, elements);
 
   @override String toString() =>
       "Pseudo-list containing all $length $r-combinations of items from $elements.";
@@ -106,20 +80,16 @@ class Combinations extends _Combinatorics {
 
 Map<int, int> _factCache = {};
 
-int _fact(int n) =>
-    _factCache.containsKey(n) ? _factCache[n] :
-    (n < 2 ? 1 : _factCache[n] = n * _fact(n - 1));
+int _fact(int n) => _factCache.containsKey(n)
+    ? _factCache[n]
+    : (n < 2 ? 1 : _factCache[n] = n * _fact(n - 1));
 
 int _nPr(int n, int r) => _fact(n) ~/ _fact(n - r);
 
 int _nCr(int n, int r) => _nPr(n, r) ~/ _fact(r);
 
 List _combination(int k, int r, List elements) {
-  int
-  n = elements.length,
-      position = 0,
-      d = _nCr(n - position - 1, r - 1)
-  ;
+  int n = elements.length, position = 0, d = _nCr(n - position - 1, r - 1);
 
   while (k >= d) {
     k -= d;
@@ -130,8 +100,7 @@ List _combination(int k, int r, List elements) {
   if (r == 0) return [];
   else {
     List tail = elements.sublist(position + 1);
-    return [elements[position]]
-      ..addAll(_combination(k, r - 1, tail));
+    return [elements[position]]..addAll(_combination(k, r - 1, tail));
   }
 }
 

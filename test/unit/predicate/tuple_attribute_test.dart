@@ -30,21 +30,17 @@ main() {
     });
   });
 
-  group('isTupleLeaf:        \t',(){
-
-    test('Should return false when another tuple is contained within.',(){
-       Tuple testTuple, embeddedTuple;
-      embeddedTuple = new Tuple (['String', 83, 0.00]);
+  group('isTupleLeaf:        \t', () {
+    test('Should return false when another tuple is contained within.', () {
+      Tuple testTuple, embeddedTuple;
+      embeddedTuple = new Tuple(['String', 83, 0.00]);
       testTuple = new Tuple([bool, String, embeddedTuple, int]);
       expect(isTupleLeaf(testTuple), isFalse);
     });
 
-    test('Should return true when there is not tuple contained within.',(){
-       Tuple testTuple = new Tuple([int, bool, String, new DateTime.now()]);
+    test('Should return true when there is not tuple contained within.', () {
+      Tuple testTuple = new Tuple([int, bool, String, new DateTime.now()]);
       expect(isTupleLeaf(testTuple), isTrue);
     });
-
-
-
   });
 }

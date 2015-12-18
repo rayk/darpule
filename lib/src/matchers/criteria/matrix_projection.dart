@@ -1,31 +1,28 @@
 part of criteriaMatch;
 
-/// Returns a function that can match each element in a subject against a criteriaTuple.
+/// Returns a list of matchers for each element of  criteriaTuple.
 ///
-/// Each matcher closes over a criterion and is placed in a list with a corresponding
-/// criterion element. The returned function takes a subject element and it's position
-/// within the subject tuple. Where the elements match the criteria a true is
-/// returned else false.
 ///
 /// Picking order is used as mutual exclusive criteria is not present. For
 /// example String is a Object and Tuple actually implements list, etc. Added
 /// to this a criteria can mix and match any criterion types. So we work from
 /// most specific to least specific.
-CriteriaMatrix criteriaProjection(Tuple criteriaTuple) {
-  List<ElementMatcher> criteriaMatchers = [];
+List selectMatchers(Tuple criteria) {
+
+  List elementMatchers = [];
   bool matcherNotSelected;
 
   void addMatcher(Function matcher) {
     matcherNotSelected = false;
-    criteriaMatchers.add(matcher);
+    elementMatchers.add(matcher);
   }
 
   Function selectCollectionMatcher(var criterion) =>
       isCollectionValueList(criterion)
           ? listValueMatcher(criterion as List)
           : isCollectionValueMap(criterion)
-          ? mapValueMatcher(criterion as Map)
-          : setValueMatcher(criterion as Set);
+              ? mapValueMatcher(criterion as Map)
+              : setValueMatcher(criterion as Set);
 
   Function selectRunnableMatcher(var criterion) => isPattern(criterion)
       ? patternMatcher(criterion as RegExp)
@@ -46,15 +43,12 @@ CriteriaMatrix criteriaProjection(Tuple criteriaTuple) {
       isCollectionTypeList(criterion)
           ? listTypeMatcher(criterion)
           : isCollectionTypeMap(criterion)
-          ? mapTypeMatcher(criterion)
-          : setTypeMatcher(criterion);
+              ? mapTypeMatcher(criterion)
+              : setTypeMatcher(criterion);
 
-  for (var criterion in criteriaTuple) {
+
+  for (var criterion in criteria) {
     matcherNotSelected = true;
-
-    if (isValueTuple(criterion)) {
-      addMatcher(criteriaProjection(criterion as Tuple));
-    }
 
     if (isValueRunnable(criterion) && matcherNotSelected) {
       addMatcher(selectRunnableMatcher(criterion));
@@ -88,17 +82,34 @@ CriteriaMatrix criteriaProjection(Tuple criteriaTuple) {
       addMatcher(selectCollectionTypeMatcher(criterion));
     }
 
-    if (isType(criterion) && matcherNotSelected) {
+    if (isAType(criterion) && matcherNotSelected) {
       addMatcher(typeMatcher(criterion as Type));
     }
   }
 
-  assert(criteriaMatchers.length == criteriaTuple.length);
-  bool matcher(int position, var element) {
-    Function elementMatcher = criteriaMatchers[position];
-    return elementMatcher(element);
+  assert(elementMatchers.length == criteria.length);
+
+  return elementMatchers;
+}
+
+/// returns a list of the element position which are mandatory in the criteria
+List<int> mandatoryCriterionPositions(Tuple criteria) {
+  List<int> orderedMandatoryPositions = [];
+
+  for (int i = 0; i < criteria.length; i++) {
+    if (isMandatoryCriterion(criteria[i])) {
+      orderedMandatoryPositions.add(i);
+    }
   }
 
-  return matcher;
+  return orderedMandatoryPositions;
+}
+
+/// Returns a list of all the viable subject lengths for the criteria, accounting
+/// for optionals.
+List<int> viableSubjectLengths(Tuple criteriaTuple) {
+  return new List.generate(
+      criteriaTuple.length - criteriaTuple.elementCount + 1,
+      (idx) => idx + criteriaTuple.elementCount);
 }
 

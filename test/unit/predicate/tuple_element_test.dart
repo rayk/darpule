@@ -3,6 +3,7 @@ library darpule.test.predicate.elements;
 import 'package:darpule/predicate.dart';
 import 'package:darpule/tuple.dart';
 import 'package:test/test.dart';
+import 'package:quiver_optional/optional.dart';
 
 main() {
   group('isCollectionList:      \t', () {
@@ -93,21 +94,21 @@ main() {
 
   group('isType:                 \t', () {
     test('Should return true when element contains a type.', () {
-      expect(isType(String), isTrue);
-      expect(isType(int), isTrue);
-      expect(isType(bool), isTrue);
-      expect(isType(double), isTrue);
-      expect(isType(Tuple), isTrue);
-      expect(isType(Function), isTrue);
-      expect(isType(Optional), isTrue);
+      expect(isAType(String), isTrue);
+      expect(isAType(int), isTrue);
+      expect(isAType(bool), isTrue);
+      expect(isAType(double), isTrue);
+      expect(isAType(Tuple), isTrue);
+      expect(isAType(Function), isTrue);
+      expect(isAType(Optional), isTrue);
     });
 
     test('Should return false when element does not contain type.', () {
-      expect(isType('Hello World'), isFalse);
-      expect(isType(203984), isFalse);
-      expect(isType(new Tuple([])), isFalse);
-      expect(isType(new DateTime.now()), isFalse);
-      expect(isType(new Optional.absent()), isFalse);
+      expect(isAType('Hello World'), isFalse);
+      expect(isAType(203984), isFalse);
+      expect(isAType(new Tuple([])), isFalse);
+      expect(isAType(new DateTime.now()), isFalse);
+      expect(isAType(new Optional.absent()), isFalse);
     });
   });
 
@@ -235,9 +236,19 @@ main() {
     });
   });
 
+  group('isValueBoolean:        \t',(){
+    test('Should return true when the value is a true or false.', () {
+      expect(isValueBoolean(true), isTrue);
+      expect(isValueBoolean(false), isTrue);
+      expect(isValueBoolean(null), isFalse);
+      expect(isValueBoolean(bool), isFalse);
+      expect(isValueBoolean('true'), isFalse);
+    });
+  });
+
   group('isValueRunnable:        \t', () {
     calRange(int x) => x * 10;
-    Tuple tuple = new Tuple([calRange, new RegExp('')]);
+    ;
     test('Should return true for executables.', () {
       expect(isValueRunnable(calRange), isTrue);
       expect(isValueRunnable(new RegExp('')), isTrue);

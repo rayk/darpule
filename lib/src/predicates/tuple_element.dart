@@ -1,5 +1,7 @@
 part of predicate;
 
+typedef bool elementPredicate(var element);
+
 /// Returns true if a list has been specified in a criteria element;
 bool isCollectionTypeList(var element) => element == List ? true : false;
 
@@ -31,7 +33,7 @@ bool isOptionalValued(var element) {
     return false;
   } else {
     element as Optional;
-    return element.isPresent && !isType(element.value) ? true : false;
+    return element.isPresent && !isAType(element.value) ? true : false;
   }
 }
 
@@ -51,7 +53,12 @@ bool isPattern(var element) {
 }
 
 /// Returns true when element is of the type [Type].
-bool isType(var element) => element is Type ? true : false;
+bool isAType(var element) => element is Type ? true : false;
+
+/// Returns true when the element if a Boolean value.
+bool isValueBoolean(var element){
+  return element is bool ? true : false;
+}
 
 /// Returns true when the element is a [Type] and it is a Set, List or Map.
 bool isTypeCollection(var element) =>
@@ -72,7 +79,7 @@ bool isTypeOptional(var element) {
 bool isTypeTuple(Type element) => element == Tuple;
 
 /// Returns true when element contains a type of [Object], used as a mandatory wild.
-bool isTypeWild(var element) => element is Object ? true : false;
+bool isTypeWild(var element) => element != Type  ? true : false;
 
 bool isTypeWildMandatory(var element) {
   return element == Type ? true : false;
@@ -86,7 +93,7 @@ bool isTypeWildOptionally(var element) {
 
 /// Returns true when the element is a value instance
 bool isValue(var element) {
-  return !isType(element);
+  return !isAType(element);
 }
 
 /// Returns true when contains an instance of a collection.
@@ -107,7 +114,7 @@ bool isValueRunnable(var element) =>
 bool isValueTuple(var element) => element is Tuple ? true : false;
 
 bool isValueWildMandatory(var element) {
-  return element is Object &&
+  return
       element == Object &&
       !isTypeOptional(element) &&
       !isValueOptional(element) &&

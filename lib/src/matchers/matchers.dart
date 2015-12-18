@@ -3,7 +3,9 @@ library matchers;
 import 'package:darpule/predicate.dart';
 import 'package:darpule/tuple.dart';
 import 'package:quiver_collection/collection.dart';
-import 'critieria/critieria_matcher.dart';
+import 'criteria/criteria_matcher.dart';
+
+export 'package:quiver_optional/optional.dart';
 
 /// Return true if the Subject Tuple is a match against the defined collection of criterion.
 ///
@@ -12,10 +14,9 @@ import 'critieria/critieria_matcher.dart';
 /// if the subject is match considering the rules defined in the Criteria tuple.
 TupleMatcher criteriaMatcher(Tuple tupleCriteria) {
   Map matchingMatrix = generateMatchMatrix(tupleCriteria);
-  bool matcher(Tuple subject){
-    subjectMatchForCriteria(matchingMatrix, subject) ? true : false;
-    return false;
-  };
+  bool matcher(Tuple subject) {
+    return subjectMatchesCriteria(matchingMatrix, subject) ? true : false;
+  }
   return matcher;
 }
 
@@ -58,6 +59,14 @@ ElementMatcher mapTypeMatcher(Type collectionType) {
 /// Criterion is closed over when the matcher is picked.
 ElementMatcher mapValueMatcher(Map mapCriterion) {
   bool matcher(Map elementMap) => mapsEqual(mapCriterion, elementMap);
+  return matcher;
+}
+
+ElementMatcher tupleValueMatcher(Tuple embeddedTupleCriteria){
+  Map matrix = generateMatchMatrix(embeddedTupleCriteria);
+  bool matcher(Tuple subject){
+    return subjectMatchesCriteria(matrix, subject) ? true : false;
+  }
   return matcher;
 }
 
@@ -114,6 +123,7 @@ ElementMatcher wildTypeMatcher(Type wildType) {
   return matcher;
 }
 
+/// Returns true as long as the subject element contains a value.
 ElementMatcher wildValueMatcher() {
   bool matcher(var element) =>
       element != null && isValue(element) ? true : false;
