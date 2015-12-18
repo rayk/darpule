@@ -1,6 +1,9 @@
 // Copyright (c) 2015, Ray King. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
+// This example shows off a features of Darplue. Hopefully they will feel natural
+// to use and not cause any discomfort.
+
 library darpule.example;
 
 import 'package:darpule/tuple.dart';
