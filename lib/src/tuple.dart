@@ -1,7 +1,7 @@
 library Tuple;
 
 import 'package:collection/wrappers.dart';
-import 'package:quiver/collection.dart';
+import 'package:quiver_collection/collection.dart';
 import 'package:quiver_hashcode/hashcode.dart';
 
 
