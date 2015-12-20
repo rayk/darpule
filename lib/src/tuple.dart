@@ -3,7 +3,7 @@ library Tuple;
 import 'package:collection/wrappers.dart';
 import 'package:quiver/collection.dart';
 import 'package:quiver_hashcode/hashcode.dart';
-import 'package:quiver_optional/optional.dart';
+
 
 /// Return a [Tuple] with the types of each element of the [subjectTuple].
 ///
