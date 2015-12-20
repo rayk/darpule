@@ -254,6 +254,7 @@ _"So Many Where Do We Start"_
 - [tuple](https://pub.dartlang.org/packages/tuple) provides stronger type implementation, has nice way to layer a tuple within a tuple.
 - [duty](https://pub.dartlang.org/packages/duty) provides more then a Tuple but does have type safe containers for a Monuple, Pairple and Triple.
 - [vacuum_persistent] (https://pub.dartlang.org/packages/vacuum_persistent) provide a complete persistence with immutable data structures.
+- [built_collection] (https://pub.dartlang.org/packages/built_collection) achieves immutability across all the Dart Data Structures via the use of builders.
 
 If a packages should be on this list and is not, just add it via a pull request or rise an [issue](https://github.com/rayk/darpule/issues/new).
 
